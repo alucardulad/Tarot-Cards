@@ -10,7 +10,10 @@ target 'tarot_cards' do
   pod 'SwiftyJSON'
   
   pod 'Alamofire'
+  
+  pod 'SwifterSwift'
 
+  pod 'Dollar'
 end
 
 # Usage:

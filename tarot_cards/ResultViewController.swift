@@ -18,11 +18,12 @@ class ResultViewController: UIViewController {
     private var cardViews: [CardDisplayView] = []
     private var meaningLabels: [UILabel] = []
     private var analysisLabel: UILabel?
-
+    private let reBGImageView: UIImageView = UIImageView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        title = "抽卡结果"
+        title = ""
         setupUI()
         if shouldAutoDraw && cards.isEmpty {
             cards = TarotCardManager.shared.drawThreeRandomCards()
@@ -45,6 +46,15 @@ class ResultViewController: UIViewController {
     }
 
     private func setupUI() {
+        
+        reBGImageView.image = UIImage.reBG
+        reBGImageView.contentMode = .center
+        view.addSubview(reBGImageView)
+        reBGImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+        
         let scrollView = UIScrollView()
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -57,15 +67,16 @@ class ResultViewController: UIViewController {
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
-
+        
         let questionLabel = UILabel()
         questionLabel.text = question.isEmpty ? "你的问题：(未填写)" : "你的问题：\n\(question)"
         questionLabel.numberOfLines = 0
         questionLabel.textAlignment = .center
         questionLabel.font = UIFont.systemFont(ofSize: 16)
+        questionLabel.textColor = APPConstants.Color.titleColor
         contentView.addSubview(questionLabel)
         questionLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
+            make.top.equalToSuperview().offset(8)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
         }
@@ -102,7 +113,7 @@ class ResultViewController: UIViewController {
             let lbl = UILabel()
             lbl.numberOfLines = 0
             lbl.font = UIFont.systemFont(ofSize: 14)
-            lbl.textColor = .secondaryLabel
+            lbl.textColor = APPConstants.Color.explanationColor
             meaningContainer.addArrangedSubview(lbl)
             meaningLabels.append(lbl)
         }
@@ -110,7 +121,7 @@ class ResultViewController: UIViewController {
         let analysis = UILabel()
         analysis.numberOfLines = 0
         analysis.font = UIFont.systemFont(ofSize: 14)
-        analysis.textColor = .label
+        analysis.textColor = APPConstants.Color.bodyColor
         analysis.textAlignment = .left
         analysis.text = "结果解析："
         contentView.addSubview(analysis)
@@ -124,8 +135,8 @@ class ResultViewController: UIViewController {
         // 底部居中按钮：再次抽卡（置于 contentView，使页面可滚动）
         let bottomRedraw = UIButton(type: .system)
         bottomRedraw.setTitle("再次抽卡", for: .normal)
-        bottomRedraw.setTitleColor(.white, for: .normal)
-        bottomRedraw.backgroundColor = .systemBlue
+        bottomRedraw.setTitleColor(APPConstants.Color.btnT, for: .normal)
+        bottomRedraw.backgroundColor = APPConstants.Color.btnE
         bottomRedraw.layer.cornerRadius = 22
         bottomRedraw.addTarget(self, action: #selector(redrawTapped), for: .touchUpInside)
         contentView.addSubview(bottomRedraw)
@@ -164,7 +175,7 @@ class ResultViewController: UIViewController {
     private func fetchAnalysis() {
         // 构建消息
         var messages: [ChatRequestMessage] = []
-        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的三张塔罗牌及问题，返回结构化的中文解析，按“过去”、“现在”、“发展”三个小标题分别给出简洁但有深度的解读，每部分不超过 150 字。不要输出其他无关内容。")
+        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的三张塔罗牌及问题，返回结构化的中文解析，按“过去”、“现在”、“发展”三个小标题分别给出简洁但有深度的解读，每部分不少于 150 字。最后结合问题以及三张塔罗牌再给一段总结发言不少于150字，不要输出其他无关内容。")
         messages.append(system)
 
         // 构建用户内容：包含问题与卡牌列表

@@ -1,24 +1,70 @@
 PODS:
   - Alamofire (5.11.0)
+  - Dollar (9.0.0)
   - SnapKit (5.7.1)
+  - SwifterSwift (8.0.0):
+    - SwifterSwift/AppKit (= 8.0.0)
+    - SwifterSwift/AppKitNoIBInspectable (= 8.0.0)
+    - SwifterSwift/CoreAnimation (= 8.0.0)
+    - SwifterSwift/CoreGraphics (= 8.0.0)
+    - SwifterSwift/CoreLocation (= 8.0.0)
+    - SwifterSwift/CryptoKit (= 8.0.0)
+    - SwifterSwift/Dispatch (= 8.0.0)
+    - SwifterSwift/Foundation (= 8.0.0)
+    - SwifterSwift/HealthKit (= 8.0.0)
+    - SwifterSwift/MapKit (= 8.0.0)
+    - SwifterSwift/NoIBInspectable (= 8.0.0)
+    - SwifterSwift/SceneKit (= 8.0.0)
+    - SwifterSwift/SpriteKit (= 8.0.0)
+    - SwifterSwift/StoreKit (= 8.0.0)
+    - SwifterSwift/SwiftStdlib (= 8.0.0)
+    - SwifterSwift/UIKit (= 8.0.0)
+    - SwifterSwift/UIKitNoIBInspectable (= 8.0.0)
+    - SwifterSwift/WebKit (= 8.0.0)
+  - SwifterSwift/AppKit (8.0.0)
+  - SwifterSwift/AppKitNoIBInspectable (8.0.0):
+    - SwifterSwift/AppKit
+  - SwifterSwift/CoreAnimation (8.0.0)
+  - SwifterSwift/CoreGraphics (8.0.0)
+  - SwifterSwift/CoreLocation (8.0.0)
+  - SwifterSwift/CryptoKit (8.0.0)
+  - SwifterSwift/Dispatch (8.0.0)
+  - SwifterSwift/Foundation (8.0.0)
+  - SwifterSwift/HealthKit (8.0.0)
+  - SwifterSwift/MapKit (8.0.0)
+  - SwifterSwift/NoIBInspectable (8.0.0)
+  - SwifterSwift/SceneKit (8.0.0)
+  - SwifterSwift/SpriteKit (8.0.0)
+  - SwifterSwift/StoreKit (8.0.0)
+  - SwifterSwift/SwiftStdlib (8.0.0)
+  - SwifterSwift/UIKit (8.0.0)
+  - SwifterSwift/UIKitNoIBInspectable (8.0.0):
+    - SwifterSwift/UIKit
+  - SwifterSwift/WebKit (8.0.0)
   - SwiftyJSON (5.0.2)
 
 DEPENDENCIES:
   - Alamofire
+  - Dollar
   - SnapKit
+  - SwifterSwift
   - SwiftyJSON
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - Dollar
     - SnapKit
+    - SwifterSwift
     - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
+  Dollar: 2fc9bdeeb2d3ae1f251461803240d5c93829ee0c
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
+  SwifterSwift: 517fa61daf5b4c5e3ed13b9f35f4c26b310cfb97
   SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
 
-PODFILE CHECKSUM: 27d939cd64713e6e2199298f4eab417a3b5b53cc
+PODFILE CHECKSUM: 6aaed15a113a6b0aff67d159f4fb90036af5b250
 
 COCOAPODS: 1.16.2

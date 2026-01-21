@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .clear
         setupUI()
         loadLastSaved()
     }
@@ -265,7 +265,7 @@ class CardDisplayView: UIView {
     }
     
     private func setupSubviews() {
-        self.backgroundColor = .systemGray6
+        self.backgroundColor = .clear
         self.layer.cornerRadius = 8
         self.clipsToBounds = true
         
@@ -278,7 +278,7 @@ class CardDisplayView: UIView {
         }
         
         // 卡牌名字
-        nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 18)
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 1
         addSubview(nameLabel)
@@ -289,7 +289,7 @@ class CardDisplayView: UIView {
         }
         
         // 方向标记
-        directionLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        directionLabel.font = UIFont.boldSystemFont(ofSize: 14)
         directionLabel.textAlignment = .center
         addSubview(directionLabel)
         directionLabel.snp.makeConstraints { make in
@@ -306,6 +306,7 @@ class CardDisplayView: UIView {
         nameLabel.text = card.name
         directionLabel.text = card.directionText
         directionLabel.textColor = card.isUpright ? .systemGreen : .systemRed
+        nameLabel.textColor = APPConstants.Color.bodyColor
         imageView.transform = card.isUpright ? .identity : CGAffineTransform(rotationAngle: .pi)
     }
 

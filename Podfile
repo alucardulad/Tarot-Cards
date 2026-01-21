@@ -8,6 +8,8 @@ target 'tarot_cards' do
 
   # JSON / Plist helper (optional if you use Codable)
   pod 'SwiftyJSON'
+  
+  pod 'Alamofire'
 
 end
 

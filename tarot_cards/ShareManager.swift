@@ -29,16 +29,16 @@ class ShareManager {
                                  colors: [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor] as CFArray,
                                  locations: [0.0, 1.0])!
         context.drawLinearGradient(gradient,
-                                 start: CGPoint(x: 0, y: 0),
-                                 end: CGPoint(x: 0, y: height),
-                                 options: [])
+                     start: CGPoint(x: 0, y: 0),
+                     end: CGPoint(x: 0, y: height),
+                     options: [])
         
         // 添加装饰性元素
         context.setFillColor(UIColor.white.withAlphaComponent(0.1).cgColor)
-        context.fillEllipse(in: CGRect(x: 0, y: height - 200, width: 400, height: 400))
+        context.fillEllipse(in: CGRect(x: 0, y: height - CGFloat(200), width: CGFloat(400), height: CGFloat(400)))
         
-        // 标题
-        let titleFont = UIFont.boldSystemFont(ofSize: 36)
+        // 标题（放大）
+        let titleFont = UIFont.boldSystemFont(ofSize: 44)
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .font: titleFont,
             .foregroundColor: UIColor.white,
@@ -51,11 +51,11 @@ class ShareManager {
         
         let titleText = "今日塔罗运势"
         let titleSize = titleText.size(withAttributes: titleAttributes)
-        let titleRect = CGRect(x: (width - titleSize.width) / 2, y: 80, width: titleSize.width, height: titleSize.height)
+        let titleRect = CGRect(x: (width - titleSize.width) / 2, y: CGFloat(80), width: titleSize.width, height: titleSize.height)
         titleText.draw(in: titleRect, withAttributes: titleAttributes)
         
-        // 问题
-        let questionFont = UIFont.systemFont(ofSize: 20)
+        // 问题（放大）
+        let questionFont = UIFont.systemFont(ofSize: 24)
         let questionAttributes: [NSAttributedString.Key: Any] = [
             .font: questionFont,
             .foregroundColor: UIColor.white,
@@ -69,60 +69,76 @@ class ShareManager {
         
         let questionText = "我的问题：\(question)"
         let questionSize = questionText.size(withAttributes: questionAttributes)
-        let questionRect = CGRect(x: (width - questionSize.width) / 2, y: 160, width: questionSize.width, height: questionSize.height * 1.5)
+        let questionRect = CGRect(x: (width - questionSize.width) / 2, y: CGFloat(160), width: questionSize.width, height: questionSize.height * 1.5)
         questionText.draw(in: questionRect, withAttributes: questionAttributes)
         
-        // 卡牌显示区域
-        let cardSize: CGFloat = 180
-        let cardSpacing: CGFloat = 20
-        let totalCardWidth = cardSize * 3 + cardSpacing * 2
+        // 卡牌显示区域：按 ResultViewController 的布局比例（在设备点数上：卡高 320pt，image 为高度的 70%），
+        // 在分享图上使用 @2x 分辨率（宽度 750），所以将点数翻倍。
+        let uiMargin: CGFloat = 12    // Result VC 的左右边距（pt），减小以使卡边框更靠近画布
+        let uiSpacing: CGFloat = 12   // Result VC 的卡片间距（pt）
+        let scaleFactor: CGFloat = 2.0 // 分享图相对于 pt 的像素缩放
+
+        let margin = uiMargin * scaleFactor    // 32
+        let spacing = uiSpacing * scaleFactor  // 24
+        let cardHeight: CGFloat = 320 * scaleFactor // 640 (与 ResultViewController 中高度一致的翻倍值)
+        let availableWidth = width - margin * 2
+        let cardWidth = (availableWidth - spacing * 2) / 3
+        let totalCardWidth = cardWidth * 3 + spacing * 2
         let startX = (width - totalCardWidth) / 2
-        let cardY = 260
-        
-        // 卡牌名称和含义
+        let cardY: CGFloat = 280
+
+        // 对齐工具：把矩形对齐到分享图的像素网格，减少抗锯齿导致的边框粗细差异
+        let alignRectToScale: (CGRect, CGFloat) -> CGRect = { rect, scale in
+            let sx = round(rect.origin.x * scale) / scale
+            let sy = round(rect.origin.y * scale) / scale
+            let sw = round(rect.size.width * scale) / scale
+            let sh = round(rect.size.height * scale) / scale
+            return CGRect(x: sx, y: sy, width: sw, height: sh)
+        }
+
+        // 卡牌图片与含义（使用 cardWidth x cardHeight 的矩形）
         for (index, card) in cards.enumerated() {
-            let cardX = startX + CGFloat(index) * (cardSize + cardSpacing)
-            
-            // 卡牌背景框
-            context.setFillColor(UIColor.white.withAlphaComponent(0.2).cgColor)
-            context.setStrokeColor(UIColor.white.cgColor)
-            context.setLineWidth(2)
-            let cardRect = CGRect(x: cardX, y: cardY, width: cardSize, height: cardSize)
-            context.addRect(cardRect)
-            context.drawPath(using: .fillStroke)
-            
-            // 卡牌名称
-            let cardNameFont = UIFont.boldSystemFont(ofSize: 18)
-            let cardNameAttributes: [NSAttributedString.Key: Any] = [
-                .font: cardNameFont,
-                .foregroundColor: UIColor.white
-            ]
-            
-            let cardNameText = card.name
-            let cardNameSize = cardNameText.size(withAttributes: cardNameAttributes)
-            let cardNameRect = CGRect(x: cardX + (cardSize - cardNameSize.width) / 2, 
-                                     y: cardY + 20, 
-                                     width: cardNameSize.width, 
-                                     height: cardNameSize.height)
-            cardNameText.draw(in: cardNameRect, withAttributes: cardNameAttributes)
-            
-            // 方位
-            let directionFont = UIFont.systemFont(ofSize: 14)
+            let cardX = startX + CGFloat(index) * (cardWidth + spacing)
+
+            // 卡牌背景框（使用 UIBezierPath 绘制并对齐到像素）
+            let strokeWidth: CGFloat = 2.0
+            var cardRect = CGRect(x: cardX, y: cardY, width: cardWidth, height: cardHeight)
+            cardRect = alignRectToScale(cardRect, scaleFactor)
+            let cornerRadius: CGFloat = 8.0
+            let path = UIBezierPath(roundedRect: cardRect, cornerRadius: cornerRadius)
+            path.lineWidth = strokeWidth
+            UIColor.white.withAlphaComponent(0.18).setFill()
+            UIColor.white.withAlphaComponent(0.25).setStroke()
+            path.fill()
+            path.stroke()
+
+            // 绘制卡牌图片（替代名称），图片放在卡牌矩形的上方区域（与 CardDisplayView 中 imageView 占比一致，约 70%）
+            if let img = UIImage(named: card.image) {
+                let imageInset: CGFloat = 12
+                let imageAreaHeight = cardHeight * 0.7
+                let imageRect = CGRect(x: cardX + imageInset,
+                                       y: cardY + imageInset,
+                                       width: cardWidth - imageInset * 2,
+                                       height: imageAreaHeight - imageInset)
+                img.draw(in: imageRect)
+            }
+
+            // 方位（微增字体）
+            let directionFont = UIFont.systemFont(ofSize: 18)
             let directionAttributes: [NSAttributedString.Key: Any] = [
                 .font: directionFont,
                 .foregroundColor: UIColor.white
             ]
-            
             let directionText = card.directionText
             let directionSize = directionText.size(withAttributes: directionAttributes)
-            let directionRect = CGRect(x: cardX + (cardSize - directionSize.width) / 2, 
-                                     y: cardY + 50, 
-                                     width: directionSize.width, 
-                                     height: directionSize.height)
+            let directionRect = CGRect(x: cardX + (cardWidth - directionSize.width) / 2,
+                                      y: cardY + cardHeight + 8,
+                                      width: directionSize.width,
+                                      height: directionSize.height)
             directionText.draw(in: directionRect, withAttributes: directionAttributes)
-            
-            // 含义（简化版）
-            let meaningFont = UIFont.systemFont(ofSize: 12)
+
+            // 含义（显示在卡牌下方，放大字号并居中）
+            let meaningFont = UIFont.systemFont(ofSize: 16)
             let meaningAttributes: [NSAttributedString.Key: Any] = [
                 .font: meaningFont,
                 .foregroundColor: UIColor.white,
@@ -133,22 +149,20 @@ class ShareManager {
                     return style
                 }()
             ]
-            
-            // 截取含义的前一部分
+
             let fullMeaning = card.currentMeaning
             let words = fullMeaning.components(separatedBy: "。")
-            let shortMeaning = words.first ?? fullMeaning
-            
-            let meaningSize = shortMeaning.size(withAttributes: meaningAttributes)
-            let meaningRect = CGRect(x: cardX + 10, 
-                                     y: cardY + 80, 
-                                     width: cardSize - 20, 
-                                     height: 80)
+            let shortMeaning = (words.first?.isEmpty ?? true) ? fullMeaning : words.first ?? fullMeaning
+
+            let meaningRect = CGRect(x: cardX + 8,
+                                     y: cardY + cardHeight + 8 + directionSize.height + 8,
+                                     width: cardWidth - 16,
+                                     height: CGFloat(72))
             shortMeaning.draw(in: meaningRect, withAttributes: meaningAttributes)
         }
         
-        // 解析文本（简化版）
-        let analysisFont = UIFont.systemFont(ofSize: 14)
+        // 解析文本（简化版，放大）
+        let analysisFont = UIFont.systemFont(ofSize: 18)
         let analysisAttributes: [NSAttributedString.Key: Any] = [
             .font: analysisFont,
             .foregroundColor: UIColor.white,
@@ -164,10 +178,9 @@ class ShareManager {
         let analysisLines = analysis.components(separatedBy: "\n")
         var shortAnalysis = ""
         for line in analysisLines {
-            if line.contains("过去") || line.contains("现在") || line.contains("发展") {
-                shortAnalysis += line + "\n"
+            if line.contains("总结") {
+                shortAnalysis = analysisLines[10] + "\n"
             }
-            if shortAnalysis.count > 200 { break }
         }
         
         if shortAnalysis.isEmpty {
@@ -175,11 +188,11 @@ class ShareManager {
         }
         
         let analysisSize = shortAnalysis.size(withAttributes: analysisAttributes)
-        let analysisRect = CGRect(x: 50, y: cardY + cardSize + 40, width: width - 100, height: analysisSize.height * 3)
+        let analysisRect = CGRect(x: CGFloat(50), y: cardY + cardHeight + CGFloat(90), width: width - CGFloat(100), height: analysisSize.height * 4)
         shortAnalysis.draw(in: analysisRect, withAttributes: analysisAttributes)
         
         // 底部分享语
-        let shareFont = UIFont.italicSystemFont(ofSize: 16)
+        let shareFont = UIFont.italicSystemFont(ofSize: 18)
         let shareAttributes: [NSAttributedString.Key: Any] = [
             .font: shareFont,
             .foregroundColor: UIColor.white,
@@ -192,7 +205,7 @@ class ShareManager {
         
         let shareText = "🔮 占卜源于神秘，解读归于智慧 🔮"
         let shareSize = shareText.size(withAttributes: shareAttributes)
-        let shareRect = CGRect(x: (width - shareSize.width) / 2, y: height - 100, width: shareSize.width, height: shareSize.height)
+        let shareRect = CGRect(x: (width - shareSize.width) / 2, y: height - CGFloat(90), width: shareSize.width, height: shareSize.height)
         shareText.draw(in: shareRect, withAttributes: shareAttributes)
         
         // 生成图片

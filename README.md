@@ -1,99 +1,118 @@
-# Tarot Cards
+# ✨ Tarot Cards - 女孩的神秘小助手 ✨
 
-一个用于 iOS 的塔罗牌抽卡示例应用（Swift + UIKit）。
+一个超可爱的iOS塔罗牌占卜小应用~ (Swift + UIKit写的哦！)
 
-## 简介
+## 💕 简介
 
-该应用可以为用户随机抽取三张塔罗牌，展示牌面、方向（正位/逆位）与牌义，支持动画翻牌、保存最近一次抽卡与抽卡历史。项目使用 SnapKit 进行布局，部分 JSON 数据使用 SwiftyJSON（通过 CocoaPods 管理）。
+亲爱的主人快来试试看呀~ 这个app可以帮你随机抽取三张神秘的塔罗牌，会告诉你每一张牌的正位逆位含义哦！还有超好看的翻牌动画，可以把抽卡结果保存起来，像写小日记一样~ 💕
 
-**开发团队：**
-- 🎨 **小萌** - 功能需求提出与基础实现
-- 🔧 **老萨满** - 技术架构设计与优化实现
+项目用了超好用的SnapKit来布局，数据是用SwiftyJSON管理的~ (CocoaPods安安的~)
 
-## 主要功能
+**开发小团队：**
+- 🎀 **小萌** - 提出了超棒的分享功能点子！灵感源泉~ 💕
+- 🔧 **老萨满** - 技术大佬！把我小小的想法变成了超棒的大工程~ 🌟
 
-### 🎯 核心抽卡功能
-- 随机抽取三张牌并显示牌义
-- 卡牌翻转动画与再次抽卡（带延迟与动画）
-- 保存最近一次问题与抽卡结果到本地（UserDefaults）
-- 将抽卡结果追加到历史记录
+## ✨ 主要功能 (女孩子专属版)
 
-### 💖 闺蜜分享功能 (新增)
-- 一键生成精美分享卡片
-- 支持分享到微信、QQ等社交平台
-- 分享卡片包含：问题、三张塔罗牌牌面、方位、含义、简要解析
-- 粉紫色渐变背景，女孩子友好的设计风格
-- 高清@2x分辨率，像素对齐优化
-- 真实卡牌图片显示
+### 🎯 基础抽卡功能
+- 轻松抽取三张神秘塔罗牌，每张牌都有自己的小秘密哦~ ✨
+- 超好玩的翻牌动画，像变魔法一样~ 🎭
+- 可以把抽卡结果偷偷记在小本本里~ 💕
+- 历史记录功能，像看星座运势一样有趣~
 
-## 运行环境
+### 💖 闺蜜分享功能 (小萌最爱的功能！)
+- 一键生成超！级！美！的分享卡片！
+- 分享给好闺蜜一起讨论运势，超开心的~ 🎉
+- 分享卡片里有：问题、三张可爱的小牌牌、方位、含义、小解析
+- 粉粉紫紫的渐变背景，超！女！孩！子！的设计风格！
+- 高清@2x画质，美到舍不得发出去~ 💖
+- 真实的卡牌图片，每一张都好可爱！
 
-- macOS + Xcode（建议 Xcode 13 及以上）
-- iOS 13.0+
-- 已安装 CocoaPods（用于依赖管理）
+## ✨ 环境要求 (准备起来超简单！)
 
-## 快速开始
+- macOS + Xcode (建议用 Xcode 13 哦~)
+- iOS 13.0+ (手机不要太老啦~)
+- 安装了 CocoaPods (依赖管理神器~)
 
-1. 克隆仓库到本地。
-2. 在项目根目录打开终端，执行：
+## 🚀 快速开始 (三步就能玩起来啦！)
+
+1. 先把仓库克隆到本地吧~ 💕
+2. 在项目根目录打开终端，输入这个命令：
 
 ```bash
 pod install
 ```
 
-3. 使用生成的 `.xcworkspace` 打开工程：
+(这个命令会安装所有需要的小工具哦~)
 
-- 直接在 Finder 中双击 `tarot_cards.xcworkspace`，或
-- 在终端中运行 `open tarot_cards.xcworkspace`
+3. 用生成的 `.xcworkspace` 打开工程：
 
-4. 在 Xcode 中选择一个模拟器或真机，构建并运行。
+- 在 Finder 里找到 `tarot_cards.xcworkspace`，双击它~
+- 或者在终端里输入：`open tarot_cards.xcworkspace`
 
-## 项目结构（部分）
+4. 在 Xcode 里选择手机模拟器或真机，然后点运行按钮！🎉
 
-- `tarot_cards/` — 应用源代码目录：
-  - [tarot_cards/ResultViewController.swift](tarot_cards/ResultViewController.swift) — 展示抽卡结果、翻牌动画、保存历史等逻辑。
-  - [tarot_cards/DrawViewController.swift](tarot_cards/DrawViewController.swift) — 抽卡界面（入口）。
-  - [tarot_cards/TarotCard.swift](tarot_cards/TarotCard.swift) — 塔罗牌模型定义。
-  - [tarot_cards/ViewController.swift](tarot_cards/ViewController.swift) — 主视图控制器（如有）。
-  - [tarot_cards/ShareManager.swift](tarot_cards/ShareManager.swift) — 闺蜜分享功能 (新增)，负责生成分享卡片和处理分享逻辑。
+(等一小会儿就能看到我们的小app啦~)
 
-- `Pods/` — CocoaPods 依赖（已提交于此仓库）。
+## 🗂️ 项目结构 (好奇宝宝看过来~)
 
-## 开发说明
+- `tarot_cards/` - 我们的小应用源代码哦~ ✨
+  - [tarot_cards/ResultViewController.swift](tarot_cards/ResultViewController.swift) - 抽卡结果展示、翻牌动画、保存小日记~ 💕
+  - [tarot_cards/DrawViewController.swift](tarot_cards/DrawViewController.swift) - 抽卡界面入口，点击就能开始~ 🎯
+  - [tarot_cards/TarotCard.swift](tarot_cards/TarotCard.swift) - 塔罗牌的可爱小模型定义~ 🎴
+  - [tarot_cards/ViewController.swift](tarot_cards/ViewController.swift) - 主界面控制器 (如果有其他页面的话~)
+  - [tarot_cards/ShareManager.swift](tarot_cards/ShareManager.swift) - 闺蜜分享功能！小萌最爱的部分！💖
 
-- 布局使用 `SnapKit`，约束代码位于 `Pods/SnapKit/Sources`（已通过 CocoaPods 引入）。
-- 抽卡数据与牌义保存在项目资源或 plist/JSON 中（参见 `other/tarot_cards.plist`）。
-- 抽卡动画与视图逻辑可在 `ResultViewController` 与自定义的 `CardDisplayView` 中查看与修改。
+- `Pods/` - CocoaPods 小仓库，装着我们需要的所有小工具~ 📦
 
-## 本地存储
+## 💻 开发说明 (技术小细节~)
 
-- 最近问题：`UserDefaults` 键 `lastQuestion`
-- 最近一次抽卡：`lastDrawnCards`
-- 抽卡历史：`drawHistory`
+- 布局用 `SnapKit` 超好用的约束布局工具！代码在 `Pods/SnapKit/Sources` 里~ ✨
+- 塔罗牌的数据和含义藏在项目资源里哦~ (看看 `other/tarot_cards.plist` 就知道啦~)
+- 翻牌动画和界面逻辑主要在 `ResultViewController` 和可爱的 `CardDisplayView` 里面找~ 🎭
 
-## 开发历程
+(小萌不太懂技术细节啦，但觉得代码写得超好用的~) 💕
 
-### Version 1.0 - 基础抽卡功能
-- 实现基本的塔罗牌抽取和显示
-- 支持动画翻牌和历史记录
-- 技术栈：Swift + UIKit + SnapKit
+## 💾 本地存储 (偷偷记录你的小秘密~)
 
-### Version 1.1 - 闺蜜分享功能 (2026-02-03)
-**小萌提出需求，老萨满实现优化**
-- 🎨 小萌：提出闺蜜分享功能需求并实现基础版本
-- 🔧 老萨满：优化分享图片质量和布局精度
-- ✨ 功能亮点：
-  - 精美的高清分享图片
-  - 真实卡牌图片显示
-  - 女孩子友好的粉色渐变设计
-  - 一键分享到社交平台
-  - @2x分辨率设计，保持与app界面比例一致
-  - 像素对齐技术，优化视觉效果
+- 最近抽的问题：`UserDefaults` 键 `lastQuestion` (怕你忘记问什么呢~)
+- 最近一次的抽卡结果：`lastDrawnCards` (会偷偷保存起来的~)
+- 抽卡历史小本本：`drawHistory` (可以回顾以前的运势变化哦~)
 
-## 贡献
+(所有数据都乖乖存在你手机里，不会告诉别人的~ 💕)
 
-欢迎提交 Issue 与 PR：
+## 🌈 开发历程 (我们的爱情故事~)
 
-- Fork 本仓库并新建分支实现修复或特性
-- 提交 PR 并附上复现步骤与变更说明
-- 特别感谢小萌的功能建议和用户体验指导
+### Version 1.0 - 基础抽卡功能 (小萌很满意~)
+- 实现了最基本的塔罗牌抽取和显示功能~ ✨
+- 加入了超好玩的翻牌动画和历史记录~ 🎉
+- 用了 Swift + UIKit + SnapKit 技术，老萨满超厉害的！🔧
+
+### Version 1.1 - 闺蜜分享功能 (2026-02-03) - 小萌最爱的版本！
+**💕 小萌提出可爱想法，老萨满帅气实现 💕**
+
+- 🎀 **小萌** 提出了闺蜜分享功能的超级点子！灵感一闪一闪~ ✨
+- 🔧 **老萨满** 把小萌的梦幻想法变成了超级精美的现实！太厉害了！🌟
+- ✨ 这个版本的超棒亮点：
+  - 精美到不行的分享图片~ 每一张都想收藏！💖
+  - 可爱的真实卡牌图片显示~ 好萌好萌！🎴
+  - 粉粉紫紫的女孩子设计风格~ 甜到心里！🌸
+  - 一键分享到社交平台~ 和闺蜜分享超开心！🎉
+  - @2x高清设计~ 美到哭出来！😭
+  - 像素对齐技术~ 细节控超满足！🔍
+
+(老萨满和小萌一起完成的小项目，超有成就感！💕)
+
+## 🎀 贡献指南 (欢迎来玩哦~)
+
+如果你也有超棒的想法，欢迎给我们提 Issue 和 PR 哦~ ✨
+
+### 🌟 参与方式
+- Fork 我们的小仓库，然后在新建分支上实现你的可爱想法~ 💕
+- 提交 PR 的时候，记得写清楚你做了什么哦，这样我们能看懂~ 📝
+- 特别特别感谢小萌的温柔功能建议和超棒的用户体验指导~ 🎀
+
+### 💖 小萌的心里话
+这个app是我们一起用心做的小宝贝~ 如果你也喜欢塔罗牌，喜欢和朋友分享生活，那就加入我们吧！
+
+期待看到更多可爱的小功能！让我们一起让这个app变得更加美好~ 🌸💕

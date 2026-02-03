@@ -55,6 +55,13 @@ class ResultViewController: UIViewController {
             make.width.equalToSuperview()
         }
         
+        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
+        view.addSubview(blur)
+        blur.alpha = 0.2
+        blur.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         let scrollView = UIScrollView()
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in

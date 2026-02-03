@@ -15,6 +15,7 @@ class ResultViewController: UIViewController {
     // 如果是从历史记录跳转过来，外部可以设置此 id，避免重复新增历史条目
     var historyID: String?
     private var redrawButton: UIButton?
+    private var shareButton: UIButton?
     private var cardViews: [CardDisplayView] = []
     private var meaningLabels: [UILabel] = []
     private var analysisLabel: UILabel?
@@ -139,22 +140,39 @@ class ResultViewController: UIViewController {
         }
         self.analysisLabel = analysis
 
-        // 底部居中按钮：再次抽卡（置于 contentView，使页面可滚动）
+        // 底部按钮容器：包含再次抽卡和分享按钮
+        let buttonContainer = UIStackView()
+        buttonContainer.axis = .horizontal
+        buttonContainer.distribution = .fillEqually
+        buttonContainer.spacing = 12
+        contentView.addSubview(buttonContainer)
+        buttonContainer.snp.makeConstraints { make in
+            make.top.equalTo(analysis.snp.bottom).offset(12)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+            make.height.equalTo(44)
+            make.bottom.equalToSuperview().offset(-16)
+        }
+
+        // 再次抽卡按钮
         let bottomRedraw = UIButton(type: .system)
         bottomRedraw.setTitle("再次抽卡", for: .normal)
         bottomRedraw.setTitleColor(APPConstants.Color.btnT, for: .normal)
         bottomRedraw.backgroundColor = APPConstants.Color.btnE
         bottomRedraw.layer.cornerRadius = 22
         bottomRedraw.addTarget(self, action: #selector(redrawTapped), for: .touchUpInside)
-        contentView.addSubview(bottomRedraw)
-        bottomRedraw.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(analysis.snp.bottom).offset(12)
-            make.width.equalTo(160)
-            make.height.equalTo(44)
-            make.bottom.equalToSuperview().offset(-16)
-        }
+        buttonContainer.addArrangedSubview(bottomRedraw)
         self.redrawButton = bottomRedraw
+
+        // 分享给闺蜜按钮
+        let shareButton = UIButton(type: .system)
+        shareButton.setTitle("分享给闺蜜", for: .normal)
+        shareButton.setTitleColor(.white, for: .normal)
+        shareButton.backgroundColor = .systemPink
+        shareButton.layer.cornerRadius = 22
+        shareButton.addTarget(self, action: #selector(shareTapped), for: .touchUpInside)
+        buttonContainer.addArrangedSubview(shareButton)
+        self.shareButton = shareButton
     }
 
     private func displayCards() {
@@ -230,6 +248,20 @@ class ResultViewController: UIViewController {
     // MARK: - Redraw (animated)
     @objc private func redrawTapped() {
         performRedraw()
+    }
+    
+    // MARK: - Share
+    @objc private func shareTapped() {
+        presentShareSheet()
+    }
+    
+    private func presentShareSheet() {
+        ShareManager.shared.presentShareSheet(
+            from: self,
+            question: question,
+            cards: cards,
+            analysis: analysisLabel?.text ?? "塔罗牌解读"
+        )
     }
 
     private func performRedraw() {

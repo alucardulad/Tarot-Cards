@@ -100,15 +100,35 @@ class DrawViewController: UIViewController {
         topSearchBar.layer.borderWidth = 1
         topSearchBar.layer.borderColor = UIColor.white.withAlphaComponent(0.06).cgColor
 
-        // Title label
+        // 每日一签按钮
+        let dailyDrawButton = UIButton(type: .system)
+        dailyDrawButton.backgroundColor = .systemPurple
+        dailyDrawButton.setTitle("✨ 每日一签", for: .normal)
+        dailyDrawButton.setTitleColor(.white, for: .normal)
+        dailyDrawButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        dailyDrawButton.layer.cornerRadius = 20
+        dailyDrawButton.layer.shadowColor = UIColor.systemPurple.cgColor
+        dailyDrawButton.layer.shadowRadius = 8
+        dailyDrawButton.layer.shadowOpacity = 0.6
+        dailyDrawButton.layer.shadowOffset = CGSize(width: 0, height: 4)
+        dailyDrawButton.addTarget(self, action: #selector(dailyDrawTapped), for: .touchUpInside)
+        view.addSubview(dailyDrawButton)
+        dailyDrawButton.snp.makeConstraints { make in
+            make.top.equalTo(topSearchBar.snp.bottom).offset(12)
+            make.leading.equalToSuperview().offset(16)
+            make.width.equalTo(120)
+            make.height.equalTo(40)
+        }
+
+        // 标题标签
         subtitleLabel.text = "最近占卜记录"
         subtitleLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         subtitleLabel.textColor = .label
         subtitleLabel.textAlignment = .left
         view.addSubview(subtitleLabel)
         subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(topSearchBar.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(16)
+            make.top.equalTo(topSearchBar.snp.bottom).offset(12)
+            make.leading.equalTo(dailyDrawButton.snp.trailing).offset(12)
             make.trailing.equalToSuperview().offset(-16)
         }
 
@@ -233,6 +253,12 @@ class DrawViewController: UIViewController {
         resultVC.question = question
         resultVC.shouldAutoDraw = true
         navigationController?.pushViewController(resultVC, animated: true)
+    }
+    
+    // MARK: - 每日一签
+    @objc private func dailyDrawTapped() {
+        let dailyDrawVC = DailyDrawViewController()
+        navigationController?.pushViewController(dailyDrawVC, animated: true)
     }
 
     // Load history array from UserDefaults

@@ -86,4 +86,14 @@ class TarotCardManager {
         }
         return Array(selectedCards)
     }
+    
+    /// 随机抽取1张不重复的塔罗牌，每张随机分配正位或逆位
+    func drawOneRandomCards() -> [TarotCard] {
+        var selectedCards = allCards.shuffled().prefix(1).map { card -> TarotCard in
+            var card = card
+            card.isUpright = Bool.random()
+            return card
+        }
+        return Array(selectedCards)
+    }
 }

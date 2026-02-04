@@ -17,7 +17,6 @@ class DailyDrawViewController: UIViewController {
     private let meaningView = UIScrollView()
     private let meaningLabel = UILabel()
     private let historyButton = UIButton(type: .system)
-    private var cardDisplayView: CardDisplayView?
     private var hasDrawnToday = false
     
     override func viewDidLoad() {
@@ -40,6 +39,22 @@ class DailyDrawViewController: UIViewController {
     }
     
     private func setupUI() {
+        // 背景图（如果有名为 reBG 的资源则使用）
+        if let bg = UIImage(named: "reBG") {
+            let bgView = UIImageView(image: bg)
+            bgView.contentMode = .scaleAspectFill
+            view.insertSubview(bgView, at: 0)
+            bgView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
+            view.insertSubview(blur, aboveSubview: bgView)
+            blur.alpha = 0.18
+            blur.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+
         // 标题
         let titleLabel = UILabel()
         titleLabel.text = "✨ 今日运势签"
@@ -48,21 +63,20 @@ class DailyDrawViewController: UIViewController {
         titleLabel.textAlignment = .center
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(8)
             make.centerX.equalToSuperview()
         }
         
         // 占卜师图标
-        fortunetellerImageView.contentMode = .scaleAspectFit
-        fortunetellerImageView.image = UIImage(systemName: "star.circle.fill")
+        fortunetellerImageView.image = UIImage.init(named: "card_back")
         fortunetellerImageView.tintColor = .systemPurple
-        fortunetellerImageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 120, weight: .bold)
+//        fortunetellerImageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 120, weight: .bold)
         view.addSubview(fortunetellerImageView)
         fortunetellerImageView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
-            make.width.equalTo(120)
-            make.height.equalTo(120)
+            make.width.equalTo(291/2)
+            make.height.equalTo(512/2)
         }
         
         // 欢迎语
@@ -119,7 +133,7 @@ class DailyDrawViewController: UIViewController {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
             // 限制底部，避免无限扩展并允许内部滚动
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-80)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-60)
         }
         
         meaningLabel.numberOfLines = 0
@@ -137,14 +151,14 @@ class DailyDrawViewController: UIViewController {
             make.width.equalTo(meaningView.frameLayoutGuide.snp.width).offset(-32)
         }
         
-        // 历史记录按钮
+//        // 历史记录按钮
         historyButton.setTitle("查看历史记录", for: .normal)
         historyButton.setTitleColor(APPConstants.Color.titleColor, for: .normal)
         historyButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         historyButton.addTarget(self, action: #selector(showHistory), for: .touchUpInside)
         view.addSubview(historyButton)
         historyButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
             make.centerX.equalToSuperview()
         }
     }
@@ -252,30 +266,17 @@ class DailyDrawViewController: UIViewController {
             self.meaningView.alpha = 1.0
         }
 
-        // 将占卜师图片翻转成塔罗牌显示（使用 CardDisplayView 的翻转逻辑）
-        // 先移除旧的 cardDisplayView（如果有）
-        if let existing = cardDisplayView {
-            existing.removeFromSuperview()
-            cardDisplayView = nil
-        }
-
-        // 隐藏占卜师图像，使用卡片视图进行翻转动画
-        fortunetellerImageView.isHidden = true
-
-        let cv = CardDisplayView()
-        view.addSubview(cv)
-        cv.snp.makeConstraints { make in
-            make.centerX.equalTo(fortunetellerImageView.snp.centerX)
-            make.top.equalTo(fortunetellerImageView.snp.top)
-            make.width.equalTo(fortunetellerImageView.snp.width)
-            make.height.equalTo(fortunetellerImageView.snp.height)
-        }
-        // 先显示背面，然后翻转为目标卡牌（与 ResultViewController 的表现一致）
-        cv.showBack()
-        cardDisplayView = cv
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            cv.flipToCard(card)
-        }
+        // 用 fortunetellerImageView 做翻转替换，保持原始约束尺寸不变
+        fortunetellerImageView.contentMode = .scaleAspectFill
+        fortunetellerImageView.clipsToBounds = true
+        UIView.transition(with: fortunetellerImageView, duration: 0.5, options: [.transitionFlipFromRight], animations: {
+            self.fortunetellerImageView.image = UIImage(named: card.image)
+        }, completion: { _ in
+            // 根据正逆位微调图片旋转以表示方向
+            UIView.animate(withDuration: 0.12) {
+                self.fortunetellerImageView.transform = card.isUpright ? .identity : CGAffineTransform(rotationAngle: .pi)
+            }
+        })
 
         // 先保存简要信息，随后当 ChatService 返回更详尽解析时再更新并保存
         DailyDrawManager.shared.saveTodayDraw(cards: [card], analysis: summary)

@@ -5,13 +5,13 @@ public final class ChatService {
     private init() {}
 
     @discardableResult
-    public static func send(model: String = "deepseek-chat", messages: [ChatRequestMessage], stream: Bool = false, completion: @escaping (Result<ChatCompletionResult, NetworkError>) -> Void) -> Void {
+    public static func send(model: String = "glm-4.7-flash", messages: [ChatRequestMessage], stream: Bool = false, completion: @escaping (Result<ChatCompletionResult, NetworkError>) -> Void) -> Void {
         let endpoint = Endpoint.chatCompletions(model: model, messages: messages, stream: stream)
         NetworkManager.shared.request(endpoint, completion: completion)
     }
 
     /// 便捷方法：只返回第一条回复文本（如果存在）
-    public static func sendText(model: String = "deepseek-chat", messages: [ChatRequestMessage], stream: Bool = false, completion: @escaping (Result<String, NetworkError>) -> Void) {
+    public static func sendText(model: String = "glm-4.7-flash", messages: [ChatRequestMessage], stream: Bool = false, completion: @escaping (Result<String, NetworkError>) -> Void) {
         send(model: model, messages: messages, stream: stream) { (result: Result<ChatCompletionResult, NetworkError>) in
             switch result {
             case .success(let resp):

@@ -200,7 +200,7 @@ class ResultViewController: UIViewController {
     private func fetchAnalysis() {
         // 构建消息
         var messages: [ChatRequestMessage] = []
-        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的三张塔罗牌及问题，返回结构化的中文解析，按“过去”、“现在”、“发展”三个小标题分别给出简洁但有深度的解读，每部分不少于 150 字。最后结合问题以及三张塔罗牌再给一段总结发言不少于150字，不要输出其他无关内容。")
+        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的三张塔罗牌及问题，返回结构化的中文解析，按“过去”、“现在”、“发展”三个小标题分别给出简洁但有深度的解读，每部分不少于 100 字。最后结合问题以及三张塔罗牌再给一段总结发言不少于200字，不要输出其他无关内容。")
         messages.append(system)
 
         // 构建用户内容：包含问题与卡牌列表

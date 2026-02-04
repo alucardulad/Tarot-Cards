@@ -14,9 +14,10 @@ class DailyDrawViewController: UIViewController {
     private let streakLabel = UILabel()
     private let drawButton = UIButton(type: .system)
     private let fortunetellerImageView = UIImageView()
-    private let meaningView = UIView()
+    private let meaningView = UIScrollView()
     private let meaningLabel = UILabel()
     private let historyButton = UIButton(type: .system)
+    private var cardDisplayView: CardDisplayView?
     private var hasDrawnToday = false
     
     override func viewDidLoad() {
@@ -33,6 +34,9 @@ class DailyDrawViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateDailyStatus()
+        // 刷新今天是否已签到状态，防止从其他页面返回时状态不同步
+        hasDrawnToday = DailyDrawManager.shared.hasDrawnToday()
+        updateUIState()
     }
     
     private func setupUI() {
@@ -108,11 +112,14 @@ class DailyDrawViewController: UIViewController {
         meaningView.backgroundColor = UIColor.systemGray.withAlphaComponent(0.1)
         meaningView.layer.cornerRadius = 15
         meaningView.isHidden = true
+        meaningView.alpha = 0 // 初始透明，便于淡入动画
         view.addSubview(meaningView)
         meaningView.snp.makeConstraints { make in
             make.top.equalTo(drawButton.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
+            // 限制底部，避免无限扩展并允许内部滚动
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-80)
         }
         
         meaningLabel.numberOfLines = 0
@@ -120,11 +127,14 @@ class DailyDrawViewController: UIViewController {
         meaningLabel.textColor = APPConstants.Color.bodyColor
         meaningLabel.textAlignment = .center
         meaningView.addSubview(meaningLabel)
+        // 将 label 约束到 scroll view 的 contentLayoutGuide，使其成为可滚动内容
         meaningLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.bottom.equalToSuperview().offset(-16)
+            make.top.equalTo(meaningView.contentLayoutGuide.snp.top).offset(16)
+            make.leading.equalTo(meaningView.contentLayoutGuide.snp.leading).offset(16)
+            make.trailing.equalTo(meaningView.contentLayoutGuide.snp.trailing).offset(-16)
+            make.bottom.equalTo(meaningView.contentLayoutGuide.snp.bottom).offset(-16)
+            // 宽度与可见区域一致，避免横向滚动
+            make.width.equalTo(meaningView.frameLayoutGuide.snp.width).offset(-32)
         }
         
         // 历史记录按钮
@@ -178,66 +188,157 @@ class DailyDrawViewController: UIViewController {
     }
     
     @objc private func drawDailyFortune() {
+#if !DEBUG
+        // 线上/非调试模式下，若已签到则禁止再次抽取
         guard !hasDrawnToday else { return }
+#endif
         
         // 禁用按钮防止重复点击
         drawButton.isEnabled = false
         drawButton.setTitle("正在抽取中...", for: .normal)
         
         // 模拟抽取延迟
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            // 抽取一张牌
-            let card = self.drawSingleCard()
-            
-            // 显示结果
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
+            // 抽取一张牌（安全返回）
+            guard let card = self.drawSingleCard() else {
+                // 恢复按钮并提示错误
+                self.drawButton.isEnabled = true
+                self.updateUIState()
+                let alert = UIAlertController(title: "出错了", message: "未能抽到卡牌，请稍后重试。", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "确定", style: .default))
+                self.present(alert, animated: true)
+                return
+            }
+
+            // 显示结果（初始简短信息）
             self.showDailyResult(card: card)
-            
+
             // 标记已签到
             DailyDrawManager.shared.markTodayDrawn()
             self.hasDrawnToday = true
             self.updateUIState()
-            
+
             // 显示成功提示
             self.showSuccessAlert()
         }
     }
     
-    private func drawSingleCard() -> TarotCard {
-        return TarotCardManager.shared.drawOneRandomCards().first!
+    private func drawSingleCard() -> TarotCard? {
+        return TarotCardManager.shared.drawOneRandomCards().first
     }
     
     private func showDailyResult(card: TarotCard) {
+        // 先显示基础信息，随后异步获取更详细解析并更新
         meaningView.isHidden = false
-        
+        meaningView.alpha = 0
+
         let summary = DailyDrawManager.shared.getTodayFortuneSummary(cards: [card])
-        
-        let resultText = """
+
+        let initialText = """
         🎴 今日塔罗牌：\(card.name)
-        
+
         方位：\(card.directionText)
-        
+
         含义：\(card.currentMeaning)
-        
+
         \(summary)
         """
-        
-        meaningLabel.text = resultText
-        
-        // 动画效果
+
+        meaningLabel.text = initialText
+
+        // 淡入动画
         UIView.animate(withDuration: 0.5) {
             self.meaningView.alpha = 1.0
         }
-        
-        // 保存到今日记录
+
+        // 将占卜师图片翻转成塔罗牌显示（使用 CardDisplayView 的翻转逻辑）
+        // 先移除旧的 cardDisplayView（如果有）
+        if let existing = cardDisplayView {
+            existing.removeFromSuperview()
+            cardDisplayView = nil
+        }
+
+        // 隐藏占卜师图像，使用卡片视图进行翻转动画
+        fortunetellerImageView.isHidden = true
+
+        let cv = CardDisplayView()
+        view.addSubview(cv)
+        cv.snp.makeConstraints { make in
+            make.centerX.equalTo(fortunetellerImageView.snp.centerX)
+            make.top.equalTo(fortunetellerImageView.snp.top)
+            make.width.equalTo(fortunetellerImageView.snp.width)
+            make.height.equalTo(fortunetellerImageView.snp.height)
+        }
+        // 先显示背面，然后翻转为目标卡牌（与 ResultViewController 的表现一致）
+        cv.showBack()
+        cardDisplayView = cv
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            cv.flipToCard(card)
+        }
+
+        // 先保存简要信息，随后当 ChatService 返回更详尽解析时再更新并保存
         DailyDrawManager.shared.saveTodayDraw(cards: [card], analysis: summary)
+
+        // 请求更详细解析（与 ResultViewController 风格一致）
+        fetchAnalysisFor(card: card)
+    }
+
+    // 使用 ChatService 为单张牌获取更详细的今日运势解析，并更新展示与保存
+    private func fetchAnalysisFor(card: TarotCard) {
+        var messages: [ChatRequestMessage] = []
+        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的塔罗牌信息，返回结构化的中文解析，不要输出其他无关内容。")
+        messages.append(system)
+
+        let userContent = "牌面信息：\n1. \(card.name) 【\(card.directionText)】 - \(card.currentMeaning)\n\n请基于上述信息给出“今日运势”的解析，并在最后给出总结（中文）。"
+        let userMsg = ChatRequestMessage(role: "user", content: userContent)
+        messages.append(userMsg)
+
+        DispatchQueue.main.async {
+            // 可在界面上提示正在生成更详细解析
+            // 这里简单在现有文本下追加 loading 提示
+            self.meaningLabel.text = (self.meaningLabel.text ?? "") + "\n\n正在生成更详细解析，请稍候..."
+        }
+
+        ChatService.sendText(messages: messages) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success(let text):
+                    // 更新展示并保存完整解析
+                    self.meaningLabel.text = text
+                    DailyDrawManager.shared.saveTodayDraw(cards: [card], analysis: text)
+                case .failure(let err):
+                    // 失败时保留已有简要文本并附上错误提示
+                    self.meaningLabel.text = (self.meaningLabel.text ?? "") + "\n\n生成解析失败：\(err)"
+                }
+            }
+        }
     }
     
     private func showSuccessAlert() {
         let alert = UIAlertController(title: "🎉 签到成功！", 
-                                    message: "今日运势已保存，记得要好好把握这一天哦！💕", 
+                                    message: "今日运势已保存，记得要好好把握这一天哦！💕\n\n现在可以去随心所欲地占卜啦~", 
                                     preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "好的", style: .default))
+        // 查看今日运势详情
+        let viewDetailsAction = UIAlertAction(title: "查看详情", style: .default) { [weak self] _ in
+            // 用户可以查看今天的运势详情
+        }
+        viewDetailsAction.setValue(UIColor.systemPurple, forKey: "titleTextColor")
+        alert.addAction(viewDetailsAction)
+        
+        // 去随意抽卡
+        let casualDrawAction = UIAlertAction(title: "去随意抽卡", style: .default) { [weak self] _ in
+            self?.navigationController?.popToRootViewController(animated: true)
+        }
+        casualDrawAction.setValue(UIColor.systemBlue, forKey: "titleTextColor")
+        alert.addAction(casualDrawAction)
+        
+        // 简单确认
+        let okAction = UIAlertAction(title: "好的", style: .cancel)
+        alert.addAction(okAction)
+        
         present(alert, animated: true)
     }
     

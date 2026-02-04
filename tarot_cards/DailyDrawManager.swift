@@ -57,9 +57,14 @@ class DailyDrawManager {
     
     /// 检查今天是否已经签到
     func hasDrawnToday() -> Bool {
+#if !DEBUG
+        // 线上/非调试模式下，若已签到则禁止再次抽取
         let today = self.todayString()
         let lastDrawDate = UserDefaults.standard.string(forKey: dailyDrawKey)
         return today == lastDrawDate
+#endif
+        return false
+      
     }
     
     /// 获取当前日期字符串

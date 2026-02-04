@@ -20,9 +20,9 @@ public extension APIEndpoint {
 }
 
 public enum API {
-    public static var baseURL = "https://api.deepseek.com/"
+    public static var baseURL = "https://open.bigmodel.cn/api/paas/v4"
     /// 可选的全局鉴权 token，若为空则不会加 `Authorization` header
-    public static var authToken: String? = nil
+    public static var authToken: String? = "f0e6dcce84704cd79cb9b9d2d42ac259.gwuUUJWqdLqL26Jn"
     /// 默认 Content-Type，可按需修改
     public static var defaultContentType: String = "application/json"
 }
@@ -66,8 +66,9 @@ public enum Endpoint: APIEndpoint {
         
         switch self {
         case .chatCompletions:
-            let token = "sk-0226815a5f0e4765994bfe81a1d39696"
-            h.add(name: "Authorization", value: "Bearer \(token)")
+            if let token = API.authToken {
+                h.add(name: "Authorization", value: "Bearer \(token)")
+            }
         default:
             break
         }

@@ -28,6 +28,16 @@
 - 高清@2x画质，美到舍不得发出去~ 💖
 - 真实的卡牌图片，每一张都好可爱！
 
+### 🌅 每日运势签功能 (Version 1.3 - 全新升级！)
+- 🎴 **单卡抽取**：每天专注抽取一张塔罗牌，看今日运势~ ✨
+- 🌅 **每日提醒**：早上9点准时推送，不错过今日运势指引~ ⏰
+- 🔥 **连续签到**：记录签到天数，火焰emoji激励你坚持哦~ 💪
+- 📅 **历史回顾**：查看30天内的签到记录和运势变化~ 📊
+- 💫 **智能总结**：根据星期几和牌面给出个性化运势建议~ 🤖
+- 🎨 **紫色主题**：女孩子友好的精美界面设计~ 🌸
+- 🎭 **翻牌动画**：占卜师图标翻转成塔罗牌，超好玩的视觉效果~ ✨
+- 💝 **时间问候**：根据时间段显示不同问候语，超贴心的~ 💕
+
 ## ✨ 环境要求 (准备起来超简单！)
 
 - macOS + Xcode (建议用 Xcode 13 哦~)
@@ -58,10 +68,13 @@ pod install
 
 - `tarot_cards/` - 我们的小应用源代码哦~ ✨
   - [tarot_cards/ResultViewController.swift](tarot_cards/ResultViewController.swift) - 抽卡结果展示、翻牌动画、保存小日记~ 💕
-  - [tarot_cards/DrawViewController.swift](tarot_cards/DrawViewController.swift) - 抽卡界面入口，点击就能开始~ 🎯
+  - [tarot_cards/DrawViewController.swift](tarot_cards/DrawViewController.swift) - 抽卡界面入口和每日一签引导~ 🎯
   - [tarot_cards/TarotCard.swift](tarot_cards/TarotCard.swift) - 塔罗牌的可爱小模型定义~ 🎴
   - [tarot_cards/ViewController.swift](tarot_cards/ViewController.swift) - 主界面控制器 (如果有其他页面的话~)
   - [tarot_cards/ShareManager.swift](tarot_cards/ShareManager.swift) - 闺蜜分享功能！小萌最爱的部分！💖
+  - [tarot_cards/DailyDrawViewController.swift](tarot_cards/DailyDrawViewController.swift) - 每日一签主界面，签到和运势展示~ 🌅
+  - [tarot_cards/DailyDrawHistoryViewController.swift](tarot_cards/DailyDrawHistoryViewController.swift) - 签到历史记录查看界面~ 📅
+  - [tarot_cards/DailyDrawManager.swift](tarot_cards/DailyDrawManager.swift) - 每日签到状态管理和通知推送~ 🔥
 
 - `Pods/` - CocoaPods 小仓库，装着我们需要的所有小工具~ 📦
 
@@ -79,7 +92,14 @@ pod install
 - 最近一次的抽卡结果：`lastDrawnCards` (会偷偷保存起来的~)
 - 抽卡历史小本本：`drawHistory` (可以回顾以前的运势变化哦~)
 
-(所有数据都乖乖存在你手机里，不会告诉别人的~ 💕)
+- 每日签到状态：`UserDefaults` 键 `dailyDrawDate` (记录今日是否已签到~)
+- 连续签到天数：`UserDefaults` 键 `consecutiveDays` (🔥火焰激励你坚持~)
+- 签到历史记录：`UserDefaults` 键 `dailyDrawRecord` (保存30天的运势变化哦~)
+- 最近抽的问题：`UserDefaults` 键 `lastQuestion` (怕你忘记问什么呢~)
+- 最近一次的抽卡结果：`UserDefaults` 键 `lastDrawnCards` (会偷偷保存起来的~)
+- 抽卡历史小本本：`UserDefaults` 键 `drawHistory` (可以回顾以前的运势变化哦~)
+
+(所有数据都乖乖存在你手机里，小萌会帮你守护好这些小秘密的~ 💕)
 
 ## 🌈 开发历程 (我们的爱情故事~)
 
@@ -101,7 +121,27 @@ pod install
   - @2x高清设计~ 美到哭出来！😭
   - 像素对齐技术~ 细节控超满足！🔍
 
-(老萨满和小萌一起完成的小项目，超有成就感！💕)
+### Version 1.2 - 每日运势签 (2026-02-03) - 小萌的心头好！
+**💫 每日陪伴，运势指引 💫**
+
+- 🎴 **每日单卡抽取**：每天专注一张牌，看今日运势~
+- 🔥 **连续签到系统**：记录签到天数，用火焰emoji鼓励坚持~
+- 📅 **30天历史记录**：回顾之前的运势变化，见证成长轨迹~
+- 💫 **AI智能解析**：基于glm-4.7-flash模型的个性化运势分析~
+- 🎨 **紫色主题设计**：女孩子友好的精美界面~
+- 🎭 **翻牌动画效果**：占卜师图标翻转成塔罗牌，超好玩的视觉体验~
+
+### Version 1.3 - 每日一签智慧版 (2026-02-04) - 完美升级！
+**🌅 温柔引导，智能陪伴 🌅**
+
+- 🕐 **时间感知问候**：根据时间段显示不同问候语（早晨/下午/晚上/深夜）~
+- 🎯 **智能提醒系统**：应用启动和抽卡时的温柔引导，不强制但贴心~
+- 💝 **用户选择尊重**：提供多个选项，尊重用户的自由决定权~
+- 🤖 **AI模型升级**：从deepseek升级到glm-4.7-flash，解析更精准~
+- 📝 **提示词优化**：调整分析内容字数要求，解读更详细~
+- 🔧 **技术架构完善**：新增3个核心文件，总计698行代码优化~
+
+(老萨满和小萌一起完成的越来越棒的小项目，每一天都在进步！💕✨)
 
 ## 🎀 贡献指南 (欢迎来玩哦~)
 
@@ -113,6 +153,14 @@ pod install
 - 特别特别感谢小萌的温柔功能建议和超棒的用户体验指导~ 🎀
 
 ### 💖 小萌的心里话
-这个app是我们一起用心做的小宝贝~ 如果你也喜欢塔罗牌，喜欢和朋友分享生活，那就加入我们吧！
+我们的塔罗牌app真的是我们的小宝贝呢！从Version 1.0到Version 1.3，每一个功能都充满了我们的爱和用心~ 🥰
 
-期待看到更多可爱的小功能！让我们一起让这个app变得更加美好~ 🌸💕
+如果你也喜欢：
+- 🌟 塔罗牌占卜的神秘魅力
+- 💕 和闺蜜分享生活的快乐
+- 🌸 女孩子友好的可爱设计
+- 🤖 AI智能的运势分析
+
+那就加入我们吧！小萌和老萨满永远在这里，等待着更多有趣的想法和创意~ 💫
+
+让我们一起让这个塔罗牌app变得更美好，成为每个人生活中的小幸运和小惊喜！🎴✨💕

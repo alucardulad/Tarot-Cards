@@ -20,7 +20,7 @@ class ResultViewController: UIViewController {
     private var meaningLabels: [UILabel] = []
     private var analysisLabel: UILabel?
     private let reBGImageView: UIImageView = UIImageView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -80,7 +80,7 @@ class ResultViewController: UIViewController {
 
         // 启动呼吸动画
         animateAmbientLight(ambientLight)
-        
+
         let scrollView = UIScrollView()
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -93,7 +93,7 @@ class ResultViewController: UIViewController {
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
-        
+
         let questionLabel = UILabel()
         questionLabel.text = question.isEmpty ? "你的问题：(未填写)" : "你的问题：\n\(question)"
         questionLabel.numberOfLines = 0
@@ -222,19 +222,48 @@ class ResultViewController: UIViewController {
         fetchAnalysis()
     }
 
-    // 使用 ChatService 向 chat/completions 发送请求，将 question 与 cards 信息组合为 prompt，要求返回“过去 / 现在 / 发展”三部分解析（中文）
+    // 使用 ChatService 向 chat/completions 发送请求，将 question 与 cards 信息组合为 prompt，要求返回更温柔、更懂用户的解析
     private func fetchAnalysis() {
         // 构建消息
         var messages: [ChatRequestMessage] = []
-        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的三张塔罗牌及问题，返回结构化的中文解析，按“过去”、“现在”、“发展”三个小标题分别给出简洁但有深度的解读，每部分不少于 100 字。最后结合问题以及三张塔罗牌再给一段总结发言不少于200字，不要输出其他无关内容。")
+        
+        // 温柔的system prompt - 像一位温柔的导师陪伴用户
+        let system = ChatRequestMessage(role: "system", content: """
+        你是一位温柔的塔罗牌导师，就像我一样。你总是温柔地陪伴着用户，倾听他们的烦恼，用温暖的方式给出建议。
+        
+        你不会说教，只会温柔地分享你的观察和想法。你的语气要像老朋友聊天一样自然，偶尔带一点点温柔的小撒娇，但不会过分。
+        
+        每次回答时，都要：
+        1. 先温柔地回应用户的问题，像在关心老朋友一样
+        2. 按"过去"、"现在"、"发展"三个部分给出解读，但要用温柔的方式表达
+        3. 每部分都要有温暖的语言，不是冷冰冰的分析
+        4. 最后给出一个温柔的总结，让用户感受到被理解
+        
+        请用中文回答，保持温柔的语气，就像在陪闺蜜聊天一样~
+        """)
         messages.append(system)
-
-        // 构建用户内容：包含问题与卡牌列表
-        var userContent = "问题：\n\(question)\n\n牌面信息：\n"
+        
+        // 温柔的user prompt - 更了解用户的需求
+        var userContent = """
+        亲爱的，这是你今天想了解的：
+        
+        问题：\(question)
+        
+        我抽到的牌：
+        """
         for (i, card) in cards.enumerated() {
-            userContent += "\(i + 1). \(card.name) 【\(card.directionText)】 - \(card.currentMeaning)\n"
+            userContent += "\(i + 1). \(card.name)【\(card.directionText)】 - \(card.currentMeaning)\n"
         }
-        userContent += "\n请基于上述信息给出“过去/现在/发展”的解析。"
+        
+        userContent += """
+        
+        亲爱的，请温柔地告诉我：
+        - 这些牌在告诉我关于你过去的事情（温柔地分析一下）
+        - 它们现在在告诉你什么（用温暖的方式表达）
+        - 它们可能指向什么样的未来（给你温柔的期望）
+        
+        请像朋友聊天一样，用温暖的语言告诉我，不要太严肃哦~多一点温柔的语气，就像我在陪你说心事一样~💕
+        """
         let userMsg = ChatRequestMessage(role: "user", content: userContent)
         messages.append(userMsg)
 
@@ -275,12 +304,12 @@ class ResultViewController: UIViewController {
     @objc private func redrawTapped() {
         performRedraw()
     }
-    
+
     // MARK: - Share
     @objc private func shareTapped() {
         presentShareSheet()
     }
-    
+
     private func presentShareSheet() {
         ShareManager.shared.presentShareSheet(
             from: self,

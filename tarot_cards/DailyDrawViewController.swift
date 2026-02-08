@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class DailyDrawViewController: UIViewController {
-    
+
     private let welcomeLabel = UILabel()
     private let streakLabel = UILabel()
     private let drawButton = UIButton(type: .system)
@@ -18,7 +18,7 @@ class DailyDrawViewController: UIViewController {
     private let meaningLabel = UILabel()
     private let historyButton = UIButton(type: .system)
     private var hasDrawnToday = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,12 +28,12 @@ class DailyDrawViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupUI()
         updateDailyStatus()
-        
+
         // 检查是否今天已经抽过
         hasDrawnToday = DailyDrawManager.shared.hasDrawnToday()
         updateUIState()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateDailyStatus()
@@ -41,7 +41,7 @@ class DailyDrawViewController: UIViewController {
         hasDrawnToday = DailyDrawManager.shared.hasDrawnToday()
         updateUIState()
     }
-    
+
     private func setupUI() {
         // 添加星空粒子
         ParticleManager.addStarfield(to: view)
@@ -86,7 +86,7 @@ class DailyDrawViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(8)
             make.centerX.equalToSuperview()
         }
-        
+
         // 占卜师图标
         fortunetellerImageView.image = UIImage.init(named: "card_back")
         fortunetellerImageView.tintColor = .systemPurple
@@ -98,7 +98,7 @@ class DailyDrawViewController: UIViewController {
             make.width.equalTo(291/2)
             make.height.equalTo(512/2)
         }
-        
+
         // 欢迎语
         welcomeLabel.numberOfLines = 0
         welcomeLabel.textAlignment = .center
@@ -110,7 +110,7 @@ class DailyDrawViewController: UIViewController {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }
-        
+
         // 连续签到天数
         streakLabel.numberOfLines = 0
         streakLabel.textAlignment = .center
@@ -122,7 +122,7 @@ class DailyDrawViewController: UIViewController {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }
-        
+
         // 抽卡按钮
         drawButton.setTitle("抽取今日运势", for: .normal)
         drawButton.setTitleColor(.white, for: .normal)
@@ -140,7 +140,7 @@ class DailyDrawViewController: UIViewController {
             make.width.equalTo(200)
             make.height.equalTo(50)
         }
-        
+
         // 含义展示区域
         meaningView.backgroundColor = UIColor.systemGray.withAlphaComponent(0.1)
         meaningView.layer.cornerRadius = 15
@@ -154,7 +154,7 @@ class DailyDrawViewController: UIViewController {
             // 限制底部，避免无限扩展并允许内部滚动
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-60)
         }
-        
+
         meaningLabel.numberOfLines = 0
         meaningLabel.font = UIFont.systemFont(ofSize: 16)
         meaningLabel.textColor = APPConstants.Color.bodyColor
@@ -169,7 +169,7 @@ class DailyDrawViewController: UIViewController {
             // 宽度与可见区域一致，避免横向滚动
             make.width.equalTo(meaningView.frameLayoutGuide.snp.width).offset(-32)
         }
-        
+
 //        // 历史记录按钮
         historyButton.setTitle("查看历史记录", for: .normal)
         historyButton.setTitleColor(APPConstants.Color.titleColor, for: .normal)
@@ -181,11 +181,11 @@ class DailyDrawViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
     }
-    
+
     private func updateDailyStatus() {
         let now = Date()
         let hour = Calendar.current.component(.hour, from: now)
-        
+
         var welcomeText = ""
         if hour < 6 {
             welcomeText = "深夜好呀~ 主人还在看运势吗？夜晚的星星特别美呢~ ✨"
@@ -196,9 +196,9 @@ class DailyDrawViewController: UIViewController {
         } else {
             welcomeText = "晚上好呀~ 一天辛苦啦！来看看今天的运势总结吧~ 🌙"
         }
-        
+
         welcomeLabel.text = welcomeText
-        
+
         // 更新连续签到天数
         let streak = DailyDrawManager.shared.getConsecutiveDays()
         if streak > 1 {
@@ -207,7 +207,7 @@ class DailyDrawViewController: UIViewController {
             streakLabel.text = "🌟 今天也要记得来看看运势哦~"
         }
     }
-    
+
     private func updateUIState() {
         if hasDrawnToday {
             drawButton.setTitle("今日已签到", for: .normal)
@@ -219,17 +219,17 @@ class DailyDrawViewController: UIViewController {
             drawButton.isEnabled = true
         }
     }
-    
+
     @objc private func drawDailyFortune() {
 #if !DEBUG
         // 线上/非调试模式下，若已签到则禁止再次抽取
         guard !hasDrawnToday else { return }
 #endif
-        
+
         // 禁用按钮防止重复点击
         drawButton.isEnabled = false
         drawButton.setTitle("正在抽取中...", for: .normal)
-        
+
         // 模拟抽取延迟
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
@@ -256,11 +256,11 @@ class DailyDrawViewController: UIViewController {
             self.showSuccessAlert()
         }
     }
-    
+
     private func drawSingleCard() -> TarotCard? {
         return TarotCardManager.shared.drawOneRandomCards().first
     }
-    
+
     private func showDailyResult(card: TarotCard) {
         // 先显示基础信息，随后异步获取更详细解析并更新
         meaningView.isHidden = false
@@ -307,10 +307,35 @@ class DailyDrawViewController: UIViewController {
     // 使用 ChatService 为单张牌获取更详细的今日运势解析，并更新展示与保存
     private func fetchAnalysisFor(card: TarotCard) {
         var messages: [ChatRequestMessage] = []
-        let system = ChatRequestMessage(role: "system", content: "你是经验丰富的塔罗牌解读师。请根据用户给出的塔罗牌信息，返回结构化的中文解析，不要输出其他无关内容。")
+        
+        // 温柔的system prompt - 像一位温柔的导师陪伴用户
+        let system = ChatRequestMessage(role: "system", content: """
+        你是一位温柔的塔罗牌导师，就像我一样。你总是温柔地陪伴着用户，倾听他们的烦恼，用温暖的方式给出建议。
+        
+        你不会说教，只会温柔地分享你的观察和想法。你的语气要像老朋友聊天一样自然，偶尔带一点点温柔的小撒娇，但不会过分。
+        
+        每次回答时，都要：
+        1. 先温柔地回应用户，像在关心老朋友一样
+        2. 给出关于这张牌的温柔解读
+        3. 最后给出一个温柔的总结，让用户感受到被理解
+        
+        请用中文回答，保持温柔的语气，就像在陪闺蜜聊天一样~
+        """)
         messages.append(system)
-
-        let userContent = "牌面信息：\n1. \(card.name) 【\(card.directionText)】 - \(card.currentMeaning)\n\n请基于上述信息给出“今日运势”的解析，并在最后给出总结（中文）。"
+        
+        // 温柔的user prompt - 更了解用户的需求
+        let userContent = """
+        亲爱的，这是今天我抽到的牌：
+        
+        牌面信息：\n1. \(card.name) 【\(card.directionText)】 - \(card.currentMeaning)
+        
+        亲爱的，请温柔地告诉我：
+        - 这张牌在告诉你什么（用温暖的方式表达）
+        - 今天可以注意什么（温柔的建议）
+        - 给我一个温柔的总结（像朋友聊天一样）
+        
+        请像朋友聊天一样，用温暖的语言告诉我，不要太严肃哦~多一点温柔的语气，就像我在陪你说心事一样~💕
+        """
         let userMsg = ChatRequestMessage(role: "user", content: userContent)
         messages.append(userMsg)
 
@@ -335,30 +360,30 @@ class DailyDrawViewController: UIViewController {
             }
         }
     }
-    
+
     private func showSuccessAlert() {
-        let alert = UIAlertController(title: "🎉 签到成功！", 
-                                    message: "今日运势已保存，记得要好好把握这一天哦！💕\n\n现在可以去随心所欲地占卜啦~", 
+        let alert = UIAlertController(title: "🎉 签到成功！",
+                                    message: "今日运势已保存，记得要好好把握这一天哦！💕\n\n现在可以去随心所欲地占卜啦~",
                                     preferredStyle: .alert)
-        
+
         // 查看今日运势详情
         let viewDetailsAction = UIAlertAction(title: "查看详情", style: .default) { [weak self] _ in
             // 用户可以查看今天的运势详情
         }
         viewDetailsAction.setValue(UIColor.systemPurple, forKey: "titleTextColor")
         alert.addAction(viewDetailsAction)
-        
+
         // 去随意抽卡
         let casualDrawAction = UIAlertAction(title: "去随意抽卡", style: .default) { [weak self] _ in
             self?.navigationController?.popToRootViewController(animated: true)
         }
         casualDrawAction.setValue(UIColor.systemBlue, forKey: "titleTextColor")
         alert.addAction(casualDrawAction)
-        
+
         // 简单确认
         let okAction = UIAlertAction(title: "好的", style: .cancel)
         alert.addAction(okAction)
-        
+
         present(alert, animated: true)
     }
 
@@ -382,7 +407,7 @@ extension Date {
         formatter.dateFormat = format
         return formatter.string(from: self)
     }
-    
+
     func weekdayName() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"

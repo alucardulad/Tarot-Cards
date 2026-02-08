@@ -64,13 +64,15 @@ class AppreciationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupBackgroundEffects()          // 设置背景渐变和环境光
-            // 添加粒子系统：完整混合（星星 + 光球 + 流星 + 尘埃）
-        
-        
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "星空鉴赏")
+
+        // 设置统一背景特效
+        setupPageBackground(hasStarfield: true, hasAmbientLight: true)
+
         setupUI()                          // 设置UI布局
         loadCards()                        // 加载卡牌数据
-        ParticleManager.addDust(to: view)
+        ParticleManager.addDust(to: view)  // 添加尘埃粒子
         // 启动环境光呼吸效果（透明度在0.08到0.15之间循环）
         startAmbientAnimation()
     }

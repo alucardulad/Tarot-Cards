@@ -21,6 +21,10 @@ class DailyDrawViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "每日一签")
+
         view.backgroundColor = .systemBackground
         setupUI()
         updateDailyStatus()
@@ -39,6 +43,9 @@ class DailyDrawViewController: UIViewController {
     }
     
     private func setupUI() {
+        // 添加星空粒子
+        ParticleManager.addStarfield(to: view)
+
         // 背景图（如果有名为 reBG 的资源则使用）
         if let bg = UIImage(named: "reBG") {
             let bgView = UIImageView(image: bg)
@@ -53,6 +60,19 @@ class DailyDrawViewController: UIViewController {
             blur.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
+
+            // 添加环境光呼吸效果
+            let ambientLight = UIView()
+            ambientLight.backgroundColor = APPConstants.Color.explanationColor
+            ambientLight.alpha = 0.08
+            view.addSubview(ambientLight)
+            ambientLight.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+
+            // 启动呼吸动画
+            animateAmbientLight(ambientLight)
+        }
         }
 
         // 标题
@@ -106,14 +126,13 @@ class DailyDrawViewController: UIViewController {
         // 抽卡按钮
         drawButton.setTitle("抽取今日运势", for: .normal)
         drawButton.setTitleColor(.white, for: .normal)
-        drawButton.backgroundColor = .systemPurple
+        drawButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         drawButton.layer.cornerRadius = 25
-        drawButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        drawButton.addTarget(self, action: #selector(drawDailyFortune), for: .touchUpInside)
-        drawButton.layer.shadowColor = UIColor.systemPurple.cgColor
+        drawButton.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
         drawButton.layer.shadowRadius = 10
         drawButton.layer.shadowOpacity = 0.5
         drawButton.layer.shadowOffset = CGSize(width: 0, height: 5)
+        drawButton.addTarget(self, action: #selector(drawDailyFortune), for: .touchUpInside)
         view.addSubview(drawButton)
         drawButton.snp.makeConstraints { make in
             make.top.equalTo(streakLabel.snp.bottom).offset(24)
@@ -342,10 +361,17 @@ class DailyDrawViewController: UIViewController {
         
         present(alert, animated: true)
     }
-    
+
     @objc private func showHistory() {
         let historyVC = DailyDrawHistoryViewController()
         navigationController?.pushViewController(historyVC, animated: true)
+    }
+
+    // MARK: - 启动环境光呼吸动画
+    private func animateAmbientLight(_ view: UIView) {
+        UIView.animate(withDuration: 3, delay: 0, options: [.repeat, .autoreverse]) {
+            view.alpha = 0.15
+        }
     }
 }
 

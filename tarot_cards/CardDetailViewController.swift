@@ -138,9 +138,15 @@ class CardDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupBackgroundEffects()        // 设置背景渐变
-        
-        ParticleManager.addFullEffects(to: view)  // 添加完整混合粒子效果（星星 + 光球 + 流星 + 尘埃）
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "卡牌详情")
+
+        // 设置统一背景特效
+        setupPageBackground(hasStarfield: true, hasAmbientLight: true)
+
+        // 详情页特殊粒子效果（完整混合）
+        ParticleManager.addFullEffects(to: view)
+
         setupUI()                        // 设置UI布局
         updateCardInfo()                 // 更新卡牌信息
         startCardGlowAnimation()         // 启动光晕呼吸动画
@@ -300,25 +306,27 @@ class CardDetailViewController: UIViewController {
         closeButton.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(30)
             make.right.equalToSuperview().offset(-20)
-            make.width.height.equalTo(50)
+            make.width.height.equalTo(44)
         }
 
         // 收藏按钮
         let favoriteButton = UIButton(type: .system)
         favoriteButton.setTitle("❤️ 收藏", for: .normal)
-        favoriteButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
-        favoriteButton.setTitleColor(APPConstants.Color.btnT, for: .normal)
-        favoriteButton.backgroundColor = UIColor(hex: "2D1344")
-        favoriteButton.layer.cornerRadius = 12
-        favoriteButton.layer.borderWidth = 1.5
-        favoriteButton.layer.borderColor = APPConstants.Color.explanationColor.cgColor
+        favoriteButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        favoriteButton.setTitleColor(.white, for: .normal)
+        favoriteButton.backgroundColor = APPConstants.Color.explanationColor
+        favoriteButton.layer.cornerRadius = 16
+        favoriteButton.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        favoriteButton.layer.shadowRadius = 5
+        favoriteButton.layer.shadowOpacity = 0.5
+        favoriteButton.layer.shadowOffset = CGSize(width: 0, height: 2)
 
         view.addSubview(favoriteButton)
         favoriteButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-20)
             make.left.equalToSuperview().offset(20)
             make.right.equalToSuperview().offset(-20)
-            make.height.equalTo(50)
+            make.height.equalTo(48)
         }
 
         view.addSubview(fillButton)

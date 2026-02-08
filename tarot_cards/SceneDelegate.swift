@@ -13,12 +13,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // 不使用 storyboard，使用 UINavigationController，把 DrawViewController 作为根控制器
+        // 不使用 storyboard，使用 TabBarController 作为根控制器
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        let root = DrawViewController()
-        let nav = UINavigationController(rootViewController: root)
-        window.rootViewController = nav
+        let tabBarController = TabBarController()
+        window.rootViewController = tabBarController
         self.window = window
         window.makeKeyAndVisible()
     }

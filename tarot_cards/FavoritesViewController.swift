@@ -40,8 +40,12 @@ class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupBackgroundEffects()
-        ParticleManager.addStarfield(to: view)
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "我的收藏")
+
+        // 设置统一背景特效
+        setupPageBackground(hasStarfield: true, hasAmbientLight: true)
+
         view.backgroundColor = .clear
 
         setupUI()

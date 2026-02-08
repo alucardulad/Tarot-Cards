@@ -23,8 +23,11 @@ class ResultViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "抽牌结果")
+
         view.backgroundColor = .systemBackground
-        title = ""
         setupUI()
         if shouldAutoDraw && cards.isEmpty {
             cards = TarotCardManager.shared.drawThreeRandomCards()
@@ -47,7 +50,10 @@ class ResultViewController: UIViewController {
     }
 
     private func setupUI() {
-        
+
+        // 添加星空粒子
+        ParticleManager.addStarfield(to: view)
+
         reBGImageView.image = UIImage.reBG
         reBGImageView.contentMode = .center
         view.addSubview(reBGImageView)
@@ -55,13 +61,25 @@ class ResultViewController: UIViewController {
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
-        
+
         let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
         view.addSubview(blur)
         blur.alpha = 0.2
         blur.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+
+        // 添加环境光呼吸效果
+        let ambientLight = UIView()
+        ambientLight.backgroundColor = APPConstants.Color.explanationColor
+        ambientLight.alpha = 0.08
+        view.addSubview(ambientLight)
+        ambientLight.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        // 启动呼吸动画
+        animateAmbientLight(ambientLight)
         
         let scrollView = UIScrollView()
         view.addSubview(scrollView)
@@ -157,9 +175,13 @@ class ResultViewController: UIViewController {
         // 再次抽卡按钮
         let bottomRedraw = UIButton(type: .system)
         bottomRedraw.setTitle("再次抽卡", for: .normal)
-        bottomRedraw.setTitleColor(APPConstants.Color.btnT, for: .normal)
-        bottomRedraw.backgroundColor = APPConstants.Color.btnE
+        bottomRedraw.setTitleColor(.white, for: .normal)
+        bottomRedraw.backgroundColor = APPConstants.Color.explanationColor
         bottomRedraw.layer.cornerRadius = 22
+        bottomRedraw.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        bottomRedraw.layer.shadowRadius = 8
+        bottomRedraw.layer.shadowOpacity = 0.6
+        bottomRedraw.layer.shadowOffset = CGSize(width: 0, height: 4)
         bottomRedraw.addTarget(self, action: #selector(redrawTapped), for: .touchUpInside)
         buttonContainer.addArrangedSubview(bottomRedraw)
         self.redrawButton = bottomRedraw
@@ -168,8 +190,12 @@ class ResultViewController: UIViewController {
         let shareButton = UIButton(type: .system)
         shareButton.setTitle("分享给闺蜜", for: .normal)
         shareButton.setTitleColor(.white, for: .normal)
-        shareButton.backgroundColor = .systemPink
+        shareButton.backgroundColor = APPConstants.Color.explanationColor
         shareButton.layer.cornerRadius = 22
+        shareButton.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        shareButton.layer.shadowRadius = 8
+        shareButton.layer.shadowOpacity = 0.6
+        shareButton.layer.shadowOffset = CGSize(width: 0, height: 4)
         shareButton.addTarget(self, action: #selector(shareTapped), for: .touchUpInside)
         buttonContainer.addArrangedSubview(shareButton)
         self.shareButton = shareButton
@@ -321,5 +347,12 @@ class ResultViewController: UIViewController {
         self.historyID = id
         // 同时保存 lastAnalysis
         HistoryManager.shared.saveLastAnalysis(analysisText)
+    }
+
+    // MARK: - 启动环境光呼吸动画
+    private func animateAmbientLight(_ view: UIView) {
+        UIView.animate(withDuration: 3, delay: 0, options: [.repeat, .autoreverse]) {
+            view.alpha = 0.15
+        }
     }
 }

@@ -16,9 +16,14 @@ class DailyDrawHistoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "签到历史")
+
+        // 设置统一背景特效
+        setupPageBackground(hasStarfield: true, hasAmbientLight: true)
+
         view.backgroundColor = .systemBackground
-        title = "📅 签到历史"
-        
         setupUI()
         loadHistory()
     }

@@ -24,6 +24,12 @@ class DrawViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "塔罗占卜")
+
+        // 设置统一背景特效
+        setupPageBackground(hasStarfield: true, hasAmbientLight: true)
         view.backgroundColor = .systemBackground
         history = HistoryManager.shared.fetchHistory().compactMap { HistoryEntry(dict: $0) }
         setupUI()
@@ -306,45 +312,34 @@ class DrawViewController: UIViewController {
         topSearchBar.layer.borderWidth = 1
         topSearchBar.layer.borderColor = UIColor.white.withAlphaComponent(0.06).cgColor
 
-        // 每日一签按钮
-        let dailyDrawButton = UIButton(type: .system)
-        dailyDrawButton.backgroundColor = .systemPurple
-        dailyDrawButton.setTitle("✨ 每日一签", for: .normal)
-        dailyDrawButton.setTitleColor(.white, for: .normal)
-        dailyDrawButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        dailyDrawButton.layer.cornerRadius = 20
-        dailyDrawButton.layer.shadowColor = UIColor.systemPurple.cgColor
-        dailyDrawButton.layer.shadowRadius = 8
-        dailyDrawButton.layer.shadowOpacity = 0.6
-        dailyDrawButton.layer.shadowOffset = CGSize(width: 0, height: 4)
-        dailyDrawButton.addTarget(self, action: #selector(dailyDrawTapped), for: .touchUpInside)
-        view.addSubview(dailyDrawButton)
-        dailyDrawButton.snp.makeConstraints { make in
+        // 入口按钮容器
+        let entryButtonsContainer = UIStackView()
+        entryButtonsContainer.axis = .horizontal
+        entryButtonsContainer.distribution = .fillEqually
+        entryButtonsContainer.spacing = 12
+        view.addSubview(entryButtonsContainer)
+        entryButtonsContainer.snp.makeConstraints { make in
             make.top.equalTo(topSearchBar.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(16)
-            make.width.equalTo(120)
-            make.height.equalTo(40)
+            make.trailing.equalToSuperview().offset(-16)
+            make.height.equalTo(44)
         }
 
-        // 鉴赏模式按钮（靠近每日一签，便于入口发现）
+        // 每日一签按钮（更明显的大按钮）
+        let dailyDrawButton = UIButton(type: .system)
+        dailyDrawButton.setTitle("✨ 每日一签", for: .normal)
+        dailyDrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        dailyDrawButton.setupPrimaryButton(title: "每日一签", color: APPConstants.Color.explanationColor)
+        dailyDrawButton.addTarget(self, action: #selector(dailyDrawTapped), for: .touchUpInside)
+        entryButtonsContainer.addArrangedSubview(dailyDrawButton)
+
+        // 鉴赏模式按钮（更明显的大按钮）
         let appreciationButton = UIButton(type: .system)
-        appreciationButton.backgroundColor = .systemPurple
         appreciationButton.setTitle("鉴赏模式", for: .normal)
-        appreciationButton.setTitleColor(.white, for: .normal)
-        appreciationButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        appreciationButton.layer.cornerRadius = 20
-        appreciationButton.layer.shadowColor = UIColor.systemPurple.cgColor
-        appreciationButton.layer.shadowRadius = 8
-        appreciationButton.layer.shadowOpacity = 0.6
-        appreciationButton.layer.shadowOffset = CGSize(width: 0, height: 4)
+        appreciationButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        appreciationButton.setupPrimaryButton(title: "鉴赏模式", color: APPConstants.Color.explanationColor)
         appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
-        view.addSubview(appreciationButton)
-        appreciationButton.snp.makeConstraints { make in
-            make.top.equalTo(topSearchBar.snp.bottom).offset(12)
-            make.leading.equalTo(dailyDrawButton.snp.trailing).offset(12)
-            make.width.equalTo(120)
-            make.height.equalTo(40)
-        }
+        entryButtonsContainer.addArrangedSubview(appreciationButton)
 
         // 标题标签
         subtitleLabel.text = "最近占卜记录"

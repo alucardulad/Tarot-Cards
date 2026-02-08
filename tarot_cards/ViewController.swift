@@ -65,8 +65,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupBackgroundEffects()        // 设置背景渐变
-        ParticleManager.addStarfield(to: view)  // 添加星空粒子
+        // 设置统一导航栏
+        setupUnifiedNavigationBar(title: "每日塔罗牌")
+
+        // 设置统一背景特效
+        setupPageBackground(hasStarfield: true, hasAmbientLight: true)
         view.backgroundColor = .clear
         setupUI()                        // 设置UI
         loadLastSaved()                  // 加载上次保存的数据
@@ -139,37 +142,33 @@ class ViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-20)
         }
 
-        // 鉴赏模式按钮
-        let appreciationButton = UIButton(type: .system)
-        appreciationButton.setTitle("✨ 鉴赏模式", for: .normal)
-        appreciationButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        appreciationButton.backgroundColor = APPConstants.Color.explanationColor
-        appreciationButton.setTitleColor(.white, for: .normal)
-        appreciationButton.layer.cornerRadius = 20
-        appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
-        contentView.addSubview(appreciationButton)
-        appreciationButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(140)
-            make.height.equalTo(36)
+        // 入口按钮容器
+        let entryButtonsContainer = UIStackView()
+        entryButtonsContainer.axis = .horizontal
+        entryButtonsContainer.distribution = .fillEqually
+        entryButtonsContainer.spacing = 16
+        contentView.addSubview(entryButtonsContainer)
+        entryButtonsContainer.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
         }
 
-        // 收藏按钮
+        // 鉴赏模式按钮（更明显的大按钮）
+        let appreciationButton = UIButton(type: .system)
+        appreciationButton.setTitle("✨ 星空鉴赏", for: .normal)
+        appreciationButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        appreciationButton.setupPrimaryButton(title: "星空鉴赏", color: APPConstants.Color.explanationColor)
+        appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
+        entryButtonsContainer.addArrangedSubview(appreciationButton)
+
+        // 收藏按钮（更明显的大按钮）
         let favoritesButton = UIButton(type: .system)
-        favoritesButton.setTitle("❤️ 收藏", for: .normal)
-        favoritesButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        favoritesButton.backgroundColor = APPConstants.Color.explanationColor
-        favoritesButton.setTitleColor(.white, for: .normal)
-        favoritesButton.layer.cornerRadius = 20
+        favoritesButton.setTitle("❤️ 我的收藏", for: .normal)
+        favoritesButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        favoritesButton.setupPrimaryButton(title: "我的收藏", color: APPConstants.Color.explanationColor)
         favoritesButton.addTarget(self, action: #selector(openFavorites), for: .touchUpInside)
-        contentView.addSubview(favoritesButton)
-        favoritesButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(140)
-            make.height.equalTo(36)
-        }
+        entryButtonsContainer.addArrangedSubview(favoritesButton)
 
         // 问题输入框
         let questionField = UITextField()
@@ -187,10 +186,8 @@ class ViewController: UIViewController {
         // 去抽卡按钮
         let goDrawButton = UIButton(type: .system)
         goDrawButton.setTitle("去抽卡", for: .normal)
-        goDrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        goDrawButton.backgroundColor = .systemBlue
-        goDrawButton.setTitleColor(.white, for: .normal)
-        goDrawButton.layer.cornerRadius = 8
+        goDrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        goDrawButton.setupSmallButton(title: "去抽卡", color: APPConstants.Color.explanationColor)
         goDrawButton.addTarget(self, action: #selector(openDrawPage), for: .touchUpInside)
         contentView.addSubview(goDrawButton)
         self.goDrawButton = goDrawButton
@@ -198,7 +195,7 @@ class ViewController: UIViewController {
             make.leading.equalTo(questionField.snp.trailing).offset(8)
             make.trailing.equalToSuperview().offset(-16)
             make.centerY.equalTo(questionField)
-            make.height.equalTo(40)
+            make.height.equalTo(36)
         }
 
         // 三张卡牌容器
@@ -225,17 +222,15 @@ class ViewController: UIViewController {
         let redrawButton = UIButton(type: .system)
         redrawButton.setTitle("再次抽卡", for: .normal)
         redrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        redrawButton.backgroundColor = .systemBlue
-        redrawButton.setTitleColor(.white, for: .normal)
-        redrawButton.layer.cornerRadius = 8
+        redrawButton.setupSmallButton(title: "再次抽卡", color: APPConstants.Color.explanationColor)
         redrawButton.addTarget(self, action: #selector(drawNewCards), for: .touchUpInside)
         contentView.addSubview(redrawButton)
         self.redrawButton = redrawButton
         redrawButton.snp.makeConstraints { make in
             make.top.equalTo(cardsContainer.snp.bottom).offset(24)
             make.centerX.equalToSuperview()
-            make.width.equalTo(200)
-            make.height.equalTo(44)
+            make.width.equalTo(140)
+            make.height.equalTo(40)
         }
 
         // 含义描述容器

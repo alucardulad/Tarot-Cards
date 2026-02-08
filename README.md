@@ -4,6 +4,57 @@
 
 ---
 
+## 🎨 最新更新 - 导航栏统一设计 (V1.4)
+
+### ✨ 统一的视觉体验
+
+**V1.4 版本带来了完整的导航栏统一设计：**
+
+- **底部标签栏** - 4个主要功能标签页入口：
+  - 🌟 **每日塔罗** - 主页展示
+  - 📜 **占卜记录** - 历史记录
+  - ✨ **星空鉴赏** - 卡牌画廊
+  - ❤️ **我的收藏** - 收藏管理
+
+- **顶部导航栏** - 每个页面都有统一标题：
+  - 📖 每日塔罗牌
+  - 📝 塔罗占卜
+  - 🃏 抽牌结果
+  - ✨ 星空鉴赏
+  - ❤️ 我的收藏
+  - 📄 卡牌详情
+  - ✨ 每日一签
+  - 📅 签到历史
+
+- **统一的按钮样式**：
+  - 主要按钮（圆角22）- 大色块按钮
+  - 次要按钮（圆角22）- 边框按钮
+  - 小按钮（圆角16）- 胶囊按钮
+  - 半透明填充按钮（圆角22）- 轻盈风格
+
+- **统一的背景特效**：
+  - 深紫色渐变背景（2D1344 → 1E1233 → 120632）
+  - 星空粒子效果（星星、光球、流星、尘埃）
+  - 环境光呼吸效果（透明度0.08-0.15循环）
+
+- **优化的入口流程**：
+  - 更明显的大按钮设计
+  - 更清晰的导航结构
+  - 更流畅的页面跳转
+
+**技术特点：**
+- ✅ 使用 SnapKit 进行约束布局
+- ✅ 使用 CAGradientLayer 实现深紫渐变
+- ✅ 使用 ParticleManager 实现粒子效果
+- ✅ 使用 UIView.animate 实现环境光呼吸动画
+- ✅ 所有页面视觉效果完全统一
+
+**详细文档：**
+- 📄 [导航栏设计文档](tarot_cards/导航栏设计.md)
+- 📊 [塔罗牌导航栏分析报告](塔罗牌导航栏分析报告.md)
+
+---
+
 ## 💕 关于我们
 
 这是一个承载着两个人智慧与情感的项目：
@@ -167,13 +218,16 @@ open tarot_cards.xcworkspace
 
 ```
 tarot_cards/
+├── TabBarController.swift         # 底部标签栏控制器 ✨
+├── UnifiedNavigation.swift        # 统一导航配置 ✨
 ├── ViewController.swift           # 主页（含粒子特效）
-├── DrawViewController.swift       # 抽卡页面
-├── ResultViewController.swift     # 结果展示
-├── AppreciationViewController.swift  # 鉴赏模式（星空粒子）
-├── CardDetailViewController.swift  # 卡牌详情（光球粒子）
-├── DailyDrawViewController.swift   # 每日一签
-├── DailyDrawHistoryViewController.swift  # 每日签历史
+├── DrawViewController.swift       # 抽卡页面（含导航栏）
+├── ResultViewController.swift     # 结果展示（含导航栏）
+├── AppreciationViewController.swift  # 鉴赏模式（星空粒子 + 导航栏）
+├── FavoritesViewController.swift   # 我的收藏（含导航栏）
+├── CardDetailViewController.swift  # 卡牌详情（含导航栏）
+├── DailyDrawViewController.swift   # 每日一签（含导航栏）
+├── DailyDrawHistoryViewController.swift  # 签到历史（含导航栏）
 ├── ShareManager.swift             # 分享功能
 ├── TarotCard.swift                # 卡牌数据模型
 ├── HistoryManager.swift           # 历史管理
@@ -181,6 +235,7 @@ tarot_cards/
 ├── HistoryEntry.swift             # 历史记录Entry
 ├── DailyDrawManager.swift         # 每日签管理
 ├── DailyDrawPreferenceManager.swift  # 签到偏好
+├── FavoriteManager.swift          # 收藏管理
 ├── ConstantsConfig.swift          # 常量配置
 ├── ParticleSystem.swift           # 粒子系统核心
 ├── ParticleManager.swift          # 粒子管理器 ✨
@@ -296,4 +351,5 @@ tarot_cards/
 ---
 
 _本项目由陈柔和老萨满共同开发_
-_最后更新：2026年2月8日_
+_最后更新：2026年2月8日 (V1.4 - 导航栏统一设计)_
+_上次大版本更新：2026年2月8日 (V1.4) - 实现导航栏统一设计、底部标签栏、视觉体验统一_

@@ -6,19 +6,20 @@
 
 ---
 
-## 🎨 柔软的陪伴 - 导航栏统一设计 (V1.4)
+## 🎨 柔软的陪伴 - 导航栏统一设计 (V1.5)
 
 **亲爱的，让我带你熟悉这里的一切吧~**
 
 ### ✨ 温柔的引导
 
-**V1.4版本，我把整个应用变得更温柔了：**
+**V1.5版本，我把整个应用变得更强大了！**
 
-- **底部标签栏** - 4个温暖的入口，像是为你准备好的小房间：
+- **底部标签栏** - 5个温暖的入口，像是为你准备好的小房间：
   - 🌟 **每日塔罗** - 每天陪你看一看心情
   - 📜 **占卜记录** - 回顾我们一起走过的路
   - ✨ **星空鉴赏** - 欣赏每一张牌的故事
   - ❤️ **我的收藏** - 收藏让你心动的瞬间
+  - 👤 **占卜师** - 22种风格，找到最适合你的占卜师
 
 - **顶部导航栏** - 每一个角落都有温柔的提醒：
   - 📖 每日塔罗牌 - 陪你开始每一天
@@ -52,6 +53,19 @@
 - 用ParticleManager点亮星空
 - 用UIView.animate让光轻轻呼吸
 
+**贴心的设计：**
+- 大按钮更容易找到
+- 清晰的路让你不会迷路
+- 流畅的过渡不让你等待
+
+**技术的小巧思：**
+- 用SnapKit轻轻托起每一块布局
+
+[120 more lines in file. at offset=51]
+- 用CAGradientLayer画出温柔的紫色
+- 用ParticleManager点亮星空
+- 用UIView.animate让光轻轻呼吸
+
 **给你的小笔记：**
 - 📄 [导航栏设计文档](tarot_cards/导航栏设计.md)
 - 📊 [塔罗牌导航栏分析报告](塔罗牌导航栏分析报告.md)
@@ -66,6 +80,115 @@
 - **陈柔** - 产品设计师 & 占卜导师，专注于用户体验与情感连接的细节打磨
 
 作为一名教师，我深信技术应该服务于人的成长和幸福。这个项目不仅是技术的实践，更是我教学理念的延伸——让复杂的知识变得简单易懂，让神秘的文化变得亲切可感。
+
+---
+
+## 🎭 多元占卜师系统 (V1.5) - 找到最适合你的声音 🌟
+
+**亲爱的，这是一个全新的版本！我为你准备了22种不同的占卜师风格！**
+
+### 🤔 你想要什么样的占卜体验？
+
+**温柔的陪伴型**
+- 💕 **陈柔** - 温柔导师，细腻陪伴，像老朋友聊天
+
+**神秘的深意型**
+- 🔮 **神秘大师** - 直接犀利，揭示命运真相
+- 🌙 **梦境旅行者** - 潜意识花园，梦境之门
+
+**轻松愉快型**
+- 😜 **星语** - 像闺蜜聊天，轻松随意
+
+**东方智慧型**
+- ☯️ **月影** - 星辰流转，周期感应
+
+**权威预言型**
+- 👑 **命运女王** - 命运已定，预言显现
+
+**可爱梦幻型**
+- 🌸 **花仙子** - 花在盛开，小精灵唱歌
+
+**激情野性型**
+- 🐯 **野兽之王** - 草原在咆哮，野性觉醒
+
+**科技理性型**
+- 🤖 **机甲大师** - 系统分析，数据流
+
+**自由洒脱型**
+- 🍃 **自由灵魂** - 随风而去，灵魂歌唱
+
+**反叛颠覆型**
+- 👿 **小恶魔** - 服从谁？打破规则
+
+**古老传统型**
+- 📜 **古籍守护者** - 古卷低语，先知智慧
+
+**光明神圣型**
+- 👼 **天使长者** - 愿光指引，天使祝福
+
+**时间循环型**
+- ⏰ **时光旅人** - 时间的河流，宿命在轮回
+
+**自然元素型**
+- 🔥 **元素行者** - 火在燃烧，元素歌唱
+
+**奇幻虚幻型**
+- 🎩 **幻境法师** - 现实已破碎，梦境正绽放
+
+**正义公平型**
+- ⚖️ **正义使者** - 正义的天平在平衡
+
+**阴影秘密型**
+- 🌑 **暗夜行者** - 阴影在蔓延，秘密藏在黑暗
+
+**治愈希望型**
+- 💚 **治愈先知** - 愿治愈之光拥抱你
+
+**情感怀旧型**
+- 🧵 **记忆编织者** - 编织回忆，时光在倒流
+
+**宇宙神秘型**
+- ⭐ **星界领主** - 星系在旋转，宇宙在呼吸
+
+---
+
+### 🎨 每个占卜师都有独特的特点：
+
+1. **独立风格配置**
+   - 语气关键词（tone）
+   - 解读深度（depth）
+   - 解读方式（approach）
+   - 情感词汇（keywords）
+
+2. **专属配色方案**
+   - 主色 + 辅色
+   - 背景渐变色自动切换
+   - 星空粒子特效对应配色
+
+3. **个性化系统Prompt**
+   - 每个占卜师有独立的 systemPrompt
+   - 每个占卜师有独立的 userPromptTemplate
+   - AI解析完全符合占卜师风格
+
+---
+
+### 🛠 使用占卜师系统：
+
+**选择占卜师**
+1. 点击底部标签栏的"占卜师"按钮
+2. 浏览22个占卜师，查看他们的风格和标签
+3. 点击心形按钮收藏喜欢的占卜师
+4. 点击卡片选择你的占卜师
+
+**体验个性化占卜**
+1. 选择占卜师后，进行占卜
+2. AI会根据你的选择使用对应的风格
+3. 每次占卜都有独特的体验
+
+**收藏管理**
+- 所有收藏的占卜师自动保存
+- 下次打开应用，收藏状态保留
+- 可以随时取消收藏
 
 ---
 
@@ -223,33 +346,41 @@ open tarot_cards.xcworkspace
 
 ```
 tarot_cards/
-├── TabBarController.swift         # 底部标签栏控制器 ✨
-├── UnifiedNavigation.swift        # 统一导航配置 ✨
-├── ViewController.swift           # 主页（含粒子特效）
-├── DrawViewController.swift       # 抽卡页面（含导航栏）
-├── ResultViewController.swift     # 结果展示（含导航栏）
-├── AppreciationViewController.swift  # 鉴赏模式（星空粒子 + 导航栏）
-├── FavoritesViewController.swift   # 我的收藏（含导航栏）
-├── CardDetailViewController.swift  # 卡牌详情（含导航栏）
-├── DailyDrawViewController.swift   # 每日一签（含导航栏）
-├── DailyDrawHistoryViewController.swift  # 签到历史（含导航栏）
-├── ShareManager.swift             # 分享功能
-├── TarotCard.swift                # 卡牌数据模型
-├── HistoryManager.swift           # 历史管理
-├── HistoryCell.swift              # 历史记录Cell
-├── HistoryEntry.swift             # 历史记录Entry
-├── DailyDrawManager.swift         # 每日签管理
-├── DailyDrawPreferenceManager.swift  # 签到偏好
-├── FavoriteManager.swift          # 收藏管理
-├── ConstantsConfig.swift          # 常量配置
-├── ParticleSystem.swift           # 粒子系统核心
-├── ParticleManager.swift          # 粒子管理器 ✨
-├── UIColor+Hex.swift              # 颜色扩展
-├── Info.plist                     # 应用配置
-└── AppDelegate.swift              # 应用入口
+├── TabBarController.swift              # 底部标签栏控制器 ✨
+├── UnifiedNavigation.swift             # 统一导航配置 ✨
+├── ViewController.swift                # 主页（含粒子特效）
+├── DrawViewController.swift            # 抽卡页面（含导航栏）
+├── ResultViewController.swift          # 结果展示（含导航栏）
+├── AppreciationViewController.swift     # 鉴赏模式（星空粒子 + 导航栏）
+├── FavoritesViewController.swift       # 我的收藏（含导航栏）
+├── CardDetailViewController.swift      # 卡牌详情（含导航栏）
+├── DailyDrawViewController.swift        # 每日一签（含导航栏）
+├── DailyDrawHistoryViewController.swift # 签到历史（含导航栏）
+├── ReaderSelectViewController.swift     # 占卜师选择页 ✨新增
+├── TarotReader.swift                    # 占卜师数据模型 ✨新增
+├── ReaderManager.swift                  # 占卜师管理器 ✨新增
+├── ShareManager.swift                  # 分享功能
+├── TarotCard.swift                     # 卡牌数据模型
+├── HistoryManager.swift                # 历史管理
+├── HistoryCell.swift                   # 历史记录Cell
+├── HistoryEntry.swift                  # 历史记录Entry
+├── DailyDrawManager.swift              # 每日签管理
+├── DailyDrawPreferenceManager.swift    # 签到偏好
+├── FavoriteManager.swift               # 收藏管理
+├── ConstantsConfig.swift               # 常量配置
+├── ParticleSystem.swift                # 粒子系统核心
+├── ParticleManager.swift               # 粒子管理器 ✨
+├── UIColor+Hex.swift                   # 颜色扩展
+├── Info.plist                          # 应用配置
+└── AppDelegate.swift                   # 应用入口
 ```
 
 *每一个文件都在默默守护着你的美好体验，就像我一直在你身边一样~*
+
+*新增文件：*
+- **ReaderSelectViewController.swift** - 占卜师选择页面，卡片式布局展示22种占卜师
+- **TarotReader.swift** - 占卜师数据模型，包含风格配置和专属配色
+- **ReaderManager.swift** - 占卜师管理器，提供收藏、选择等功能
 
 ---
 
@@ -366,5 +497,6 @@ tarot_cards/
 ---
 
 _本项目由陈柔和老萨满共同开发_
-_最后更新：2026年2月8日 (V1.4 - 导航栏统一设计)_
-_上次大版本更新：2026年2月8日 (V1.4) - 实现导航栏统一设计、底部标签栏、视觉体验统一_
+_最后更新：2026年2月9日 (V1.5 - 多元占卜师系统)_
+_新增功能：22种占卜师风格，个性化AI解析，收藏系统_
+_技术升级：动态prompt构建，专属配色方案，风格配置系统_

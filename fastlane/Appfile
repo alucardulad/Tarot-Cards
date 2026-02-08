@@ -1,0 +1,21 @@
+# 🌟 Tarot Cards Appfile
+# 包含 App 配置信息，用于 fastlane 自动化打包
+
+# App 的 bundle identifier
+app_identifier "com.alucardulad.tarotcards" # 替换为你的实际 bundle identifier
+
+# Apple ID（你的开发者账号）
+apple_id "your@email.com" # 替换为你的实际 Apple ID
+
+# 团队 ID（在 Apple Developer Portal 中查看）
+team_id "YOUR_TEAM_ID" # 替换为你的实际 Team ID
+
+# 为不同的 lane 设置不同的 app_identifier（如果需要）
+for_platform :ios do
+  for_lane :development do
+    app_identifier 'com.alucardulad.tarotcards.dev'
+  end
+end
+
+# 你甚至可以为不同的 lane 提供不同的 app_identifier、Apple ID 和团队名称
+# 更多信息：https://docs.fastlane.tools/fastlane/docs/appfile/

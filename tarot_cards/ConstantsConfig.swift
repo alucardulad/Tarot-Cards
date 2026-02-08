@@ -7,14 +7,14 @@
 
 import Foundation
 import SwifterSwift
+
 struct APPConstants {
     struct Color {
-        static let titleColor: UIColor = UIColor(hex: 0xF8F8FF)!
-        static let bodyColor: UIColor = UIColor(hex: 0xF5C518)!
-        static let explanationColor: UIColor = UIColor(hex: 0x7DF9FF)!
-        static let btnS: UIColor = UIColor(hex: 0x0A1F2E)!
-        static let btnE: UIColor = UIColor(hex: 0x003B5C)!
-        static let btnT: UIColor = UIColor(hex: 0xA5F2FF)!
+        static let titleColor: UIColor = UIColor(hex: "F8F8FF")!
+        static let bodyColor: UIColor = UIColor(hex: "F5C518")!
+        static let explanationColor: UIColor = UIColor(hex: "7DF9FF")!
+        static let btnS: UIColor = UIColor(hex: "0A1F2E")!
+        static let btnE: UIColor = UIColor(hex: "003B5C")!
+        static let btnT: UIColor = UIColor(hex: "A5F2FF")!
     }
 }
-

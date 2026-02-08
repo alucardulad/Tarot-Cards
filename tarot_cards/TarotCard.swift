@@ -96,4 +96,9 @@ class TarotCardManager {
         }
         return Array(selectedCards)
     }
+
+    /// 获取所有塔罗牌（用于鉴赏模式）
+    func getAllCards() -> [TarotCard] {
+        return allCards
+    }
 }

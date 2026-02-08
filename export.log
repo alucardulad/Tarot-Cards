@@ -1,0 +1,16 @@
+2026-02-05 16:54:54.340 xcodebuild[30918:459205] [MT] IDEDistribution: -[IDEDistributionLogging _createLoggingBundleAtPath:]: Created bundle at path "/var/folders/m0/93d302wd0zz3bwcvzmrc77180000gn/T/tarot_cards_2026-02-05_16-54-54.338.xcdistributionlogs".
+2026-02-05 16:54:54.513 xcodebuild[30918:459205] [MT] IDEDistribution: Command line name "app-store" is deprecated. Use "app-store-connect" instead.
+error: exportArchive No signing certificate "iOS Distribution" found
+
+error: exportArchive No signing certificate "iOS Distribution" found
+
+error: exportArchive "tarot_cards.app" requires a provisioning profile.
+
+error: exportArchive No signing certificate "iOS Distribution" found
+
+error: exportArchive No signing certificate "iOS Distribution" found
+
+error: exportArchive No signing certificate "iOS Distribution" found
+
+** EXPORT FAILED **
+

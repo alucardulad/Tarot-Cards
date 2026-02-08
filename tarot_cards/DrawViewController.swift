@@ -326,6 +326,26 @@ class DrawViewController: UIViewController {
             make.height.equalTo(40)
         }
 
+        // 鉴赏模式按钮（靠近每日一签，便于入口发现）
+        let appreciationButton = UIButton(type: .system)
+        appreciationButton.backgroundColor = .systemPurple
+        appreciationButton.setTitle("鉴赏模式", for: .normal)
+        appreciationButton.setTitleColor(.white, for: .normal)
+        appreciationButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        appreciationButton.layer.cornerRadius = 20
+        appreciationButton.layer.shadowColor = UIColor.systemPurple.cgColor
+        appreciationButton.layer.shadowRadius = 8
+        appreciationButton.layer.shadowOpacity = 0.6
+        appreciationButton.layer.shadowOffset = CGSize(width: 0, height: 4)
+        appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
+        view.addSubview(appreciationButton)
+        appreciationButton.snp.makeConstraints { make in
+            make.top.equalTo(topSearchBar.snp.bottom).offset(12)
+            make.leading.equalTo(dailyDrawButton.snp.trailing).offset(12)
+            make.width.equalTo(120)
+            make.height.equalTo(40)
+        }
+
         // 标题标签
         subtitleLabel.text = "最近占卜记录"
         subtitleLabel.font = UIFont.preferredFont(forTextStyle: .title2)
@@ -486,6 +506,12 @@ class DrawViewController: UIViewController {
     @objc private func dailyDrawTapped() {
         let dailyDrawVC = DailyDrawViewController()
         navigationController?.pushViewController(dailyDrawVC, animated: true)
+    }
+
+    // MARK: - 鉴赏模式跳转
+    @objc private func openAppreciation() {
+        let appreciationVC = AppreciationViewController()
+        navigationController?.pushViewController(appreciationVC, animated: true)
     }
     
     // MARK: - 随意抽卡温馨提示

@@ -4,47 +4,117 @@
 //
 //  Created by alucardulad on 2026/1/20.
 //
+//  功能说明：
+//  - 首页：每日塔罗牌主界面
+//  - 抽卡功能：随机抽取3张牌
+//  - 每日一签：单卡占卜
+//  - 鉴赏模式入口：点击进入鉴赏页面
+//  - 历史记录：查看之前的抽卡记录
+//
+//  视觉特点：
+//  - 深紫色渐变背景
+//  - 星空粒子特效（星星 + 光球）
+//  - 环境光呼吸效果
+//
 
 import UIKit
 import SnapKit
+import SwifterSwift
 
 class ViewController: UIViewController {
-    
+
+    // MARK: - 属性
+
+    // 滚动视图
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+
+    // 卡牌显示视图（3张牌）
     private var cardViews: [CardDisplayView] = []
+
+    // 背景渐变层（用于深紫色渐变）
+    private let backgroundLayer = CAGradientLayer()
+
+    // 环境光覆盖视图（轻微呼吸光）
+    private let ambientLightView: UIView = {
+        let v = UIView()
+        v.isUserInteractionEnabled = false
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+
+    // 抽卡结果
     private var drawnCards: [TarotCard] = []
+
+    // 含义标签
     private var meaningLabels: [UILabel] = []
+
+    // 重新抽卡按钮
     private var redrawButton: UIButton?
+
+    // 问题输入框
     private var questionField: UITextField?
+
+    // 去抽卡按钮
     private var goDrawButton: UIButton?
-    // When pushed from homepage with a question, set these to trigger auto-draw
+
+    // 从首页传来的问题和自动抽卡标志
     var incomingQuestion: String?
     var shouldAutoDraw: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        setupBackgroundEffects()        // 设置背景渐变
+        ParticleManager.addStarfield(to: view)  // 添加星空粒子
         view.backgroundColor = .clear
-        setupUI()
-        loadLastSaved()
+        setupUI()                        // 设置UI
+        loadLastSaved()                  // 加载上次保存的数据
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if shouldAutoDraw {
-            shouldAutoDraw = false
-            if let q = incomingQuestion {
-                questionField?.text = q
-                saveLastQuestion()
-            }
-            // perform a new draw and save result
-            performDrawNewCards(cards: nil)
-        }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        ParticleManager.updateBounds(for: view)  // 更新粒子尺寸
+        updateBackgroundBounds()
     }
-    
+
+    deinit {
+        ParticleManager.cleanup(for: view)  // 清理粒子
+    }
+
+    // MARK: - 背景特效
+
+    private func setupBackgroundEffects() {
+        let colors = [
+            UIColor(hex: "2D1344").cgColor,
+            UIColor(hex: "1E1233").cgColor,
+            UIColor(hex: "120632").cgColor
+        ]
+        backgroundLayer.colors = colors
+        backgroundLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        backgroundLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        backgroundLayer.locations = [0.0, 0.5, 1.0]
+        backgroundLayer.frame = view.bounds
+        view.layer.insertSublayer(backgroundLayer, at: 0)
+
+        ambientLightView.backgroundColor = APPConstants.Color.explanationColor
+        ambientLightView.alpha = 0.08
+        view.addSubview(ambientLightView)
+        ambientLightView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        view.layoutIfNeeded()
+        updateBackgroundBounds()
+    }
+
+    private func updateBackgroundBounds() {
+        backgroundLayer.frame = view.bounds
+    }
+
+    // MARK: - UI布局
+
     private func setupUI() {
-        // 设置滚动视图
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
 
@@ -56,7 +126,7 @@ class ViewController: UIViewController {
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
-        
+
         // 标题
         let titleLabel = UILabel()
         titleLabel.text = "每日塔罗牌"
@@ -68,7 +138,39 @@ class ViewController: UIViewController {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }
-        
+
+        // 鉴赏模式按钮
+        let appreciationButton = UIButton(type: .system)
+        appreciationButton.setTitle("✨ 鉴赏模式", for: .normal)
+        appreciationButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        appreciationButton.backgroundColor = APPConstants.Color.explanationColor
+        appreciationButton.setTitleColor(.white, for: .normal)
+        appreciationButton.layer.cornerRadius = 20
+        appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
+        contentView.addSubview(appreciationButton)
+        appreciationButton.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(140)
+            make.height.equalTo(36)
+        }
+
+        // 收藏按钮
+        let favoritesButton = UIButton(type: .system)
+        favoritesButton.setTitle("❤️ 收藏", for: .normal)
+        favoritesButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        favoritesButton.backgroundColor = APPConstants.Color.explanationColor
+        favoritesButton.setTitleColor(.white, for: .normal)
+        favoritesButton.layer.cornerRadius = 20
+        favoritesButton.addTarget(self, action: #selector(openFavorites), for: .touchUpInside)
+        contentView.addSubview(favoritesButton)
+        favoritesButton.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(140)
+            make.height.equalTo(36)
+        }
+
         // 问题输入框
         let questionField = UITextField()
         questionField.borderStyle = .roundedRect
@@ -82,7 +184,7 @@ class ViewController: UIViewController {
             make.height.equalTo(40)
         }
 
-        // 去抽卡按钮（从首页进入抽卡页面）
+        // 去抽卡按钮
         let goDrawButton = UIButton(type: .system)
         goDrawButton.setTitle("去抽卡", for: .normal)
         goDrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
@@ -98,28 +200,27 @@ class ViewController: UIViewController {
             make.centerY.equalTo(questionField)
             make.height.equalTo(40)
         }
-        
-        // 三张卡牌容器 - 水平堆栈
+
+        // 三张卡牌容器
         let cardsContainer = UIStackView()
         cardsContainer.axis = .horizontal
         cardsContainer.distribution = .fillEqually
         cardsContainer.spacing = 12
         contentView.addSubview(cardsContainer)
-        
-        // 创建3个卡牌显示视图
+
         for i in 0..<3 {
             let cardView = CardDisplayView()
             cardsContainer.addArrangedSubview(cardView)
             cardViews.append(cardView)
         }
-        
+
         cardsContainer.snp.makeConstraints { make in
             make.top.equalTo(questionField.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(300)
         }
-        
+
         // 重新抽卡按钮
         let redrawButton = UIButton(type: .system)
         redrawButton.setTitle("再次抽卡", for: .normal)
@@ -136,7 +237,7 @@ class ViewController: UIViewController {
             make.width.equalTo(200)
             make.height.equalTo(44)
         }
-        
+
         // 含义描述容器
         let meaningContainer = UIStackView()
         meaningContainer.axis = .vertical
@@ -148,8 +249,7 @@ class ViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-16)
             make.bottom.equalToSuperview().offset(-20)
         }
-        
-        // 为3张卡牌分别创建含义标签
+
         for i in 0..<3 {
             let meaningLabel = UILabel()
             meaningLabel.numberOfLines = 0
@@ -159,26 +259,25 @@ class ViewController: UIViewController {
             meaningLabels.append(meaningLabel)
         }
     }
-    
+
+    // MARK: - 抽卡逻辑
+
     @objc private func drawNewCards() {
         performDrawNewCards(cards: nil)
     }
 
-    /// 主抽卡逻辑（非 objc），可接收外部传入的卡组用于显示
     private func performDrawNewCards(cards: [TarotCard]? = nil) {
         if let cards = cards {
             drawnCards = cards
         } else {
             drawnCards = TarotCardManager.shared.drawThreeRandomCards()
         }
-        // 先全部显示背面
+
         for cardView in cardViews { cardView.showBack() }
 
-        // 禁用按钮，动画完成后再启用
         redrawButton?.isEnabled = false
         redrawButton?.alpha = 0.6
 
-        // 依次翻开，每张间隔
         let flipInterval: TimeInterval = 0.6
         for (index, card) in drawnCards.enumerated() {
             let delay = Double(index) * flipInterval
@@ -186,31 +285,40 @@ class ViewController: UIViewController {
                 if index < self.cardViews.count {
                     self.cardViews[index].flipToCard(card)
                 }
-                // 更新对应含义文本
                 if index < self.meaningLabels.count {
                     self.meaningLabels[index].text = "\(index + 1). \(card.name)【\(card.directionText)】\n\(card.currentMeaning)"
                 }
             }
         }
 
-        // 在最后一张动画结束后恢复按钮（多留一点时间以确保动画完成）
         let totalDelay = Double(drawnCards.count) * flipInterval + 0.2
         DispatchQueue.main.asyncAfter(deadline: .now() + totalDelay) {
             self.redrawButton?.isEnabled = true
             self.redrawButton?.alpha = 1.0
-            // 保存最后一次抽卡结果
             self.saveLastDrawn()
         }
     }
 
-    // MARK: - Navigation
+    // MARK: - 导航
+
     @objc private func openDrawPage() {
         let question = questionField?.text ?? ""
         let drawVC = DrawViewController()
         navigationController?.pushViewController(drawVC, animated: true)
     }
 
-    // MARK: - Persistence
+    @objc private func openAppreciation() {
+        let appreciationVC = AppreciationViewController()
+        navigationController?.pushViewController(appreciationVC, animated: true)
+    }
+
+    @objc private func openFavorites() {
+        let favoritesVC = FavoritesViewController()
+        navigationController?.pushViewController(favoritesVC, animated: true)
+    }
+
+    // MARK: - 持久化
+
     private func saveLastQuestion() {
         let q = questionField?.text ?? ""
         UserDefaults.standard.set(q, forKey: "lastQuestion")
@@ -241,7 +349,6 @@ class ViewController: UIViewController {
                 }
             }
             if cards.count == 3 {
-                // 显示为上次抽卡结果
                 self.performDrawNewCards(cards: cards)
             }
         }
@@ -249,35 +356,34 @@ class ViewController: UIViewController {
 }
 
 // MARK: - CardDisplayView
+
 class CardDisplayView: UIView {
     private let imageView = UIImageView()
     private let nameLabel = UILabel()
     private let directionLabel = UILabel()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupSubviews()
     }
-    
+
     private func setupSubviews() {
         self.backgroundColor = .clear
         self.layer.cornerRadius = 8
         self.clipsToBounds = true
-        
-        // 卡牌图片
+
         imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.7)
         }
-        
-        // 卡牌名字
+
         nameLabel.font = UIFont.boldSystemFont(ofSize: 18)
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 1
@@ -287,8 +393,7 @@ class CardDisplayView: UIView {
             make.leading.equalToSuperview().offset(4)
             make.trailing.equalToSuperview().offset(-4)
         }
-        
-        // 方向标记
+
         directionLabel.font = UIFont.boldSystemFont(ofSize: 14)
         directionLabel.textAlignment = .center
         addSubview(directionLabel)
@@ -299,9 +404,8 @@ class CardDisplayView: UIView {
             make.bottom.lessThanOrEqualToSuperview().offset(-4)
         }
     }
-    
+
     func configure(with card: TarotCard) {
-        // 直接配置为显示正面（无动画）
         imageView.image = UIImage(named: card.image)
         nameLabel.text = card.name
         directionLabel.text = card.directionText
@@ -310,7 +414,6 @@ class CardDisplayView: UIView {
         imageView.transform = card.isUpright ? .identity : CGAffineTransform(rotationAngle: .pi)
     }
 
-    // 显示背面图片（静态）
     func showBack() {
         imageView.transform = .identity
         imageView.image = UIImage(named: "card_back")
@@ -318,22 +421,16 @@ class CardDisplayView: UIView {
         directionLabel.text = ""
     }
 
-    // 翻卡动画：从背面翻为具体卡牌
     func flipToCard(_ card: TarotCard) {
-        // 首先做一个翻转过渡动画替换图片和文本
         UIView.transition(with: self, duration: 0.5, options: [.transitionFlipFromRight], animations: {
             self.imageView.image = UIImage(named: card.image)
         }, completion: { _ in
-            // 更新文字和方向颜色
             self.nameLabel.text = card.name
             self.directionLabel.text = card.directionText
             self.directionLabel.textColor = card.isUpright ? .systemGreen : .systemRed
-            // 如果逆位，把图片旋转180度
             UIView.animate(withDuration: 0.12) {
                 self.imageView.transform = card.isUpright ? .identity : CGAffineTransform(rotationAngle: .pi)
             }
         })
     }
 }
-
-

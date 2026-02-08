@@ -1,0 +1,99 @@
+# 🌟 Tarot Cards Fastlane 配置
+# 此文件用于自动化打包流程
+
+# 自定义配置文档：
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# 可用操作：https://docs.fastlane.tools/actions/
+
+# 更新 fastlane 到最新版本（如果需要）
+# update_fastlane
+
+# fastlane 最低版本要求
+fastlane_version "2.59.0"
+
+default_platform :ios
+
+# 归档函数 - 统一处理打包流程
+def archive(output_path, output_name, scheme, method, configuration)
+  gym(
+      output_directory: output_path,
+      output_name: output_name,
+      scheme: scheme,
+      export_method: method, # 归档类型，可选：app-store, ad-hoc, package, enterprise, development, developer-id
+      configuration: configuration,
+      clean: true,
+      export_xcargs: "-allowProvisioningUpdates",
+      # include_symbols: false,
+      # include_bitcode: true,
+      # use_legacy_build_api: false # 使用新版本 XCode API
+  )
+end
+
+# 上传到 fir.im 函数
+def to_firim(ipaName)
+  # 从 git commits 生成变更日志（最近 20 条，排除合并提交）
+  changelog_from_git_commits(commits_count: 20, pretty: '- %s', merge_commit_filtering: 'exclude_merges')
+  # 上传到 fir.im
+  sh("fir p ../build/#{ipaName}.ipa")
+end
+
+platform :ios do
+  # 获取当前时间，用于命名文件
+  time = Time.new.strftime("%Y-%m-%d-%H-%M-%S")
+
+  before_all do
+    # 在打包前执行的操作
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    # 安装 CocoaPods
+    changelog_from_git_commits(commits_count: 20, pretty: '- %s', merge_commit_filtering: 'exclude_merges')
+    # 可选：清理旧的构建产物
+    # sh("rm -rf ../build")
+  end
+
+  desc "Tarot Cards App Store 打包"
+  lane :appstore do
+    scheme = 'tarot_cards'
+    name = scheme + time
+    archive('./build', name, scheme, 'app-store', 'Release')
+    to_firim(name)
+  end
+
+  desc "Tarot Cards Ad-hoc 打包"
+  lane :adhoc do
+    scheme = 'tarot_cards'
+    name = scheme + time
+    archive('./build', name, scheme, 'ad-hoc', 'Release')
+    to_firim(name)
+  end
+
+  desc "Tarot Cards Development 打包"
+  lane :development do
+    scheme = 'tarot_cards'
+    name = scheme + time
+    archive('./build', name, scheme, 'development', 'Debug')
+    to_firim(name)
+  end
+
+  after_all do |lane|
+    # 打包成功后执行的操作
+    # 可以在这里添加通知、截图上传等
+    puts "✅ 打包成功！"
+  end
+
+  error do |lane, exception|
+    # 打包失败后执行的操作
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+    puts "❌ 打包失败：#{exception.message}"
+  end
+end
+
+
+# 更多信息：
+# iOS 平台文档：https://docs.fastlane.tools/ios
+# 所有可用操作：https://docs.fastlane.tools/actions/
+
+# fastlane 会自动记录使用的操作，不会收集个人数据
+# 了解更多：https://docs.fastlane.tools/#metrics

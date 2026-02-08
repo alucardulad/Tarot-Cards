@@ -224,46 +224,21 @@ class ResultViewController: UIViewController {
 
     // 使用 ChatService 向 chat/completions 发送请求，将 question 与 cards 信息组合为 prompt，要求返回更温柔、更懂用户的解析
     private func fetchAnalysis() {
+        // 获取当前选择的占卜师
+        let selectedReaderId = UserDefaults.standard.string(forKey: "selectedReaderId") ?? "reader_chenrou"
+        let reader = ReaderManager.shared.getReader(id: selectedReaderId) ?? ReaderManager.shared.defaultReader
+
         // 构建消息
         var messages: [ChatRequestMessage] = []
-        
-        // 温柔的system prompt - 像一位温柔的导师陪伴用户
-        let system = ChatRequestMessage(role: "system", content: """
-        你是一位温柔的塔罗牌导师，就像我一样。你总是温柔地陪伴着用户，倾听他们的烦恼，用温暖的方式给出建议。
-        
-        你不会说教，只会温柔地分享你的观察和想法。你的语气要像老朋友聊天一样自然，偶尔带一点点温柔的小撒娇，但不会过分。
-        
-        每次回答时，都要：
-        1. 先温柔地回应用户的问题，像在关心老朋友一样
-        2. 按"过去"、"现在"、"发展"三个部分给出解读，但要用温柔的方式表达
-        3. 每部分都要有温暖的语言，不是冷冰冰的分析
-        4. 最后给出一个温柔的总结，让用户感受到被理解
-        
-        请用中文回答，保持温柔的语气，就像在陪闺蜜聊天一样~
-        """)
+
+        // 根据占卜师风格构建system prompt
+        let system = ChatRequestMessage(role: "system", content: reader.style.systemPrompt)
         messages.append(system)
-        
-        // 温柔的user prompt - 更了解用户的需求
-        var userContent = """
-        亲爱的，这是你今天想了解的：
-        
-        问题：\(question)
-        
-        我抽到的牌：
-        """
-        for (i, card) in cards.enumerated() {
-            userContent += "\(i + 1). \(card.name)【\(card.directionText)】 - \(card.currentMeaning)\n"
-        }
-        
-        userContent += """
-        
-        亲爱的，请温柔地告诉我：
-        - 这些牌在告诉我关于你过去的事情（温柔地分析一下）
-        - 它们现在在告诉你什么（用温暖的方式表达）
-        - 它们可能指向什么样的未来（给你温柔的期望）
-        
-        请像朋友聊天一样，用温暖的语言告诉我，不要太严肃哦~多一点温柔的语气，就像我在陪你说心事一样~💕
-        """
+
+        // 根据占卜师风格构建user prompt
+        var userContent = reader.style.userPromptTemplate
+            .replacingOccurrences(of: "{{question}}", with: question)
+            .replacingOccurrences(of: "{{cards}}", with: generateCardsContent())
         let userMsg = ChatRequestMessage(role: "user", content: userContent)
         messages.append(userMsg)
 
@@ -298,6 +273,17 @@ class ResultViewController: UIViewController {
                 }
             }
         }
+    }
+
+    // MARK: - Helper Methods
+
+    /// 生成牌的文本内容
+    private func generateCardsContent() -> String {
+        var content = ""
+        for (i, card) in cards.enumerated() {
+            content += "\(i + 1). \(card.name)【\(card.directionText)】 - \(card.currentMeaning)\n"
+        }
+        return content
     }
 
     // MARK: - Redraw (animated)

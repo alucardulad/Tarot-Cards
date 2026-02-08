@@ -306,36 +306,20 @@ class DailyDrawViewController: UIViewController {
 
     // 使用 ChatService 为单张牌获取更详细的今日运势解析，并更新展示与保存
     private func fetchAnalysisFor(card: TarotCard) {
+        // 获取当前选择的占卜师
+        let selectedReaderId = UserDefaults.standard.string(forKey: "selectedReaderId") ?? "reader_chenrou"
+        let reader = ReaderManager.shared.getReader(id: selectedReaderId) ?? ReaderManager.shared.defaultReader
+
         var messages: [ChatRequestMessage] = []
-        
-        // 温柔的system prompt - 像一位温柔的导师陪伴用户
-        let system = ChatRequestMessage(role: "system", content: """
-        你是一位温柔的塔罗牌导师，就像我一样。你总是温柔地陪伴着用户，倾听他们的烦恼，用温暖的方式给出建议。
-        
-        你不会说教，只会温柔地分享你的观察和想法。你的语气要像老朋友聊天一样自然，偶尔带一点点温柔的小撒娇，但不会过分。
-        
-        每次回答时，都要：
-        1. 先温柔地回应用户，像在关心老朋友一样
-        2. 给出关于这张牌的温柔解读
-        3. 最后给出一个温柔的总结，让用户感受到被理解
-        
-        请用中文回答，保持温柔的语气，就像在陪闺蜜聊天一样~
-        """)
+
+        // 根据占卜师风格构建system prompt
+        let system = ChatRequestMessage(role: "system", content: reader.style.systemPrompt)
         messages.append(system)
-        
-        // 温柔的user prompt - 更了解用户的需求
-        let userContent = """
-        亲爱的，这是今天我抽到的牌：
-        
-        牌面信息：\n1. \(card.name) 【\(card.directionText)】 - \(card.currentMeaning)
-        
-        亲爱的，请温柔地告诉我：
-        - 这张牌在告诉你什么（用温暖的方式表达）
-        - 今天可以注意什么（温柔的建议）
-        - 给我一个温柔的总结（像朋友聊天一样）
-        
-        请像朋友聊天一样，用温暖的语言告诉我，不要太严肃哦~多一点温柔的语气，就像我在陪你说心事一样~💕
-        """
+
+        // 根据占卜师风格构建user prompt
+        let userContent = reader.style.userPromptTemplate
+            .replacingOccurrences(of: "{{question}}", with: card.currentMeaning)
+            .replacingOccurrences(of: "{{cards}}", with: card.name)
         let userMsg = ChatRequestMessage(role: "user", content: userContent)
         messages.append(userMsg)
 

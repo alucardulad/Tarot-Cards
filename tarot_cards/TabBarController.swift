@@ -31,7 +31,8 @@ class TabBarController: UITabBarController {
             createDailyTarotTab(),
             createDrawHistoryTab(),
             createAppreciationTab(),
-            createFavoritesTab()
+            createFavoritesTab(),
+            createReaderSelectTab()
         ]
 
         self.viewControllers = viewControllers
@@ -77,6 +78,17 @@ class TabBarController: UITabBarController {
             title: "我的收藏",
             image: UIImage(systemName: "heart.fill"),
             selectedImage: UIImage(systemName: "heart.fill")
+        )
+        return viewController
+    }
+
+    // MARK: - 创建占卜师选择标签页
+    private func createReaderSelectTab() -> UIViewController {
+        let viewController = ReaderSelectViewController()
+        viewController.tabBarItem = UITabBarItem(
+            title: "占卜师",
+            image: UIImage(systemName: "person.3.fill"),
+            selectedImage: UIImage(systemName: "person.3.fill")
         )
         return viewController
     }

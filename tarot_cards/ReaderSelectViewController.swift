@@ -3,6 +3,11 @@
 //  tarot_cards
 //
 //  占卜师选择页面
+//
+//  ReaderSelectViewController.swift
+//  tarot_cards
+//
+//  占卜师选择页面
 //  Created by 陈柔 & 老萨满
 //  Date: 2026-02-08
 //
@@ -135,6 +140,12 @@ class ReaderSelectViewController: UIViewController {
                 UIColor(hex: "4A00E0").cgColor,
                 UIColor(hex: "8E2DE2").cgColor,
                 UIColor(hex: "4A00E0").cgColor
+            ]
+        default:
+            // 其它未显式列出的风格使用占卜师主色做简单渐变
+            gradientColors = [
+                reader.primaryColor.withAlphaComponent(0.9).cgColor,
+                reader.secondaryColor.withAlphaComponent(0.9).cgColor
             ]
         }
 
@@ -294,6 +305,9 @@ class ReaderCell: UITableViewCell {
         return button
     }()
 
+    // Delegate reference
+    weak var delegate: ReaderCellDelegate?
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -309,7 +323,8 @@ class ReaderCell: UITableViewCell {
     }
 
     private func setupUI() {
-        selectionStyle = .none
+        // 允许表格选中
+        selectionStyle = .blue
 
         contentView.addSubview(containerView)
         containerView.addSubview(avatarImageView)
@@ -390,38 +405,32 @@ class ReaderCell: UITableViewCell {
     }
 
     @objc private func selectButtonTapped() {
-        // 触发选择回调
-        if let delegate = delegate as? ReaderCellDelegate {
-            delegate.didSelectReaderAction(name: nameLabel.text ?? "")
-        }
+        delegate?.didSelectReaderAction(name: nameLabel.text ?? "")
     }
 
     @objc private func favoriteButtonTapped() {
-        // 触发收藏回调
-        guard let delegate = delegate as? ReaderCellDelegate else { return }
-
         let readerName = nameLabel.text ?? ""
-        delegate.didFavoriteReaderAction?(name: readerName)
+        delegate?.didFavoriteReaderAction(name: readerName)
     }
 }
 
 // MARK: - ReaderSelectViewController Delegate
 
-extension ReaderSelectViewController: ReaderCellDelegate {
-    var didSelectReaderAction: ((String) -> Void)? {
-        get { return nil }
-        set {}
-    }
-
-    var didFavoriteReaderAction: ((String) -> Void)? {
-        get { return nil }
-        set {}
-    }
-}
-
 protocol ReaderCellDelegate: AnyObject {
     func didSelectReaderAction(name: String)
     func didFavoriteReaderAction(name: String)
+}
+
+extension ReaderSelectViewController: ReaderCellDelegate {
+    func didSelectReaderAction(name: String) {
+        guard let reader = ReaderManager.shared.allReaders.first(where: { $0.name == name }) else { return }
+        didSelectReader(reader)
+    }
+
+    func didFavoriteReaderAction(name: String) {
+        guard let reader = ReaderManager.shared.allReaders.first(where: { $0.name == name }) else { return }
+        toggleFavoriteReader(reader)
+    }
 }
 
 extension ReaderCell {

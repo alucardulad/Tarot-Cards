@@ -28,13 +28,13 @@ class ParticleSystem {
      - 大星星：白色，缓慢移动，带旋转
      - 中等星星：淡白色，中等速度
      - 小星星：浅紫色，快速移动
-     - 微小星星：深紫色，最快，最密集
+     - 微小星星：深紫色，最快，较稀疏
      */
     static func createStarfieldEmitter() -> CAEmitterLayer {
         let emitter = CAEmitterLayer()
-        // 增加总体发射率与发射区域以实现密集星空效果
-        emitter.birthRate = 40               // 总体发射率提高
-        emitter.lifetime = 10.0              // 粒子存活时间略微增加
+        // 降低发射率以减少密度
+        emitter.birthRate = 15               // 降低总体发射率
+        emitter.lifetime = 10.0              // 粒子存活时间
         emitter.emitterCells = [
             createLargeStarCell(),           // 大星星
             createMediumStarCell(),          // 中等星星
@@ -42,7 +42,7 @@ class ParticleSystem {
             createTinyStarCell()             // 微小星星
         ]
         emitter.emitterPosition = CGPoint(x: 0, y: 0)
-        emitter.emitterSize = CGSize(width: 800, height: 800) // 扩大发射区域（可由 ParticleManager 覆盖为 view 大小）
+        emitter.emitterSize = CGSize(width: 800, height: 800)
         emitter.emitterShape = .rectangle
         emitter.emitterMode = .surface
         emitter.fillMode = .backwards        // 粒子生成后留在屏幕
@@ -53,8 +53,8 @@ class ParticleSystem {
     // 大星星
     private static func createLargeStarCell() -> CAEmitterCell {
         let cell = CAEmitterCell()
-        cell.contents = createStarImage(size: 10, color: APPConstants.Color.titleColor)
-        cell.birthRate = 6                   // 大星星增加密度
+        cell.contents = createStarImage(size: 10, color: ThemeManager.shared.textColor)
+        cell.birthRate = 2                   // 降低发射率
         cell.lifetime = 8.0                  // 存活8秒
         cell.emissionRange = 2 * CGFloat.pi  // 全方位发射
         cell.velocity = 5                    // 速度5
@@ -65,7 +65,7 @@ class ParticleSystem {
         cell.scaleRange = 0.3                // 大小范围±0.3
         cell.scaleSpeed = -0.02              // 慢慢变小
         cell.alphaSpeed = -0.2               // 慢慢消失
-        cell.color = APPConstants.Color.titleColor.cgColor
+        cell.color = ThemeManager.shared.textColor.cgColor
         cell.redRange = 0.2
         cell.greenRange = 0.2
         cell.blueRange = 0.2
@@ -76,7 +76,7 @@ class ParticleSystem {
     private static func createMediumStarCell() -> CAEmitterCell {
         let cell = CAEmitterCell()
         cell.contents = createStarImage(size: 6, color: UIColor(hex: "E0E0FF"))
-        cell.birthRate = 8                   // 中等星星更密集
+        cell.birthRate = 4                   // 降低发射率
         cell.lifetime = 6.0                  // 存活6秒
         cell.emissionRange = 2 * CGFloat.pi
         cell.velocity = 8                    // 速度8
@@ -91,7 +91,7 @@ class ParticleSystem {
     private static func createSmallStarCell() -> CAEmitterCell {
         let cell = CAEmitterCell()
         cell.contents = createStarImage(size: 3, color: UIColor(hex: "C0C0FF"))
-        cell.birthRate = 12                  // 小星星大量出现
+        cell.birthRate = 5                   // 降低发射率
         cell.lifetime = 5.0                  // 存活5秒
         cell.emissionRange = 2 * CGFloat.pi
         cell.velocity = 12                   // 速度12
@@ -106,7 +106,7 @@ class ParticleSystem {
     private static func createTinyStarCell() -> CAEmitterCell {
         let cell = CAEmitterCell()
         cell.contents = createStarImage(size: 1.5, color: UIColor(hex: "A0A0FF"))
-        cell.birthRate = 30                  // 微小星星非常密集
+        cell.birthRate = 15                  // 降低发射率
         cell.lifetime = 4.0                  // 存活4秒
         cell.emissionRange = 2 * CGFloat.pi
         cell.velocity = 15                   // 速度15
@@ -182,7 +182,7 @@ class ParticleSystem {
         cell.scale = 0.5
         cell.scaleRange = 0.5
         cell.alphaSpeed = -0.5               // 快速消失
-        cell.color = APPConstants.Color.titleColor.cgColor
+        cell.color = ThemeManager.shared.textColor.cgColor
         cell.redRange = 0.2
         cell.greenRange = 0.2
         cell.blueRange = 0.2
@@ -197,7 +197,7 @@ class ParticleSystem {
         let context = UIGraphicsGetCurrentContext()!
 
         let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                                   colors: [APPConstants.Color.titleColor.cgColor, UIColor.clear.cgColor] as CFArray,
+                                   colors: [ThemeManager.shared.textColor.cgColor, UIColor.clear.cgColor] as CFArray,
                                    locations: [0.0, 1.0])!
 
         context.drawLinearGradient(gradient,
@@ -247,7 +247,7 @@ class ParticleSystem {
         cell.scaleRange = 0.4
         cell.scaleSpeed = -0.015             // 很慢变小
         cell.alphaSpeed = -0.15              // 慢慢消失
-        cell.color = APPConstants.Color.explanationColor.cgColor
+        cell.color = ThemeManager.shared.secondaryColor.cgColor
         cell.redRange = 0.2
         cell.greenRange = 0.2
         cell.blueRange = 0.2
@@ -261,7 +261,7 @@ class ParticleSystem {
         UIGraphicsBeginImageContextWithOptions(CGSize(width: w, height: h), false, 0)
         let context = UIGraphicsGetCurrentContext()!
 
-        context.setFillColor(APPConstants.Color.explanationColor.cgColor)
+        context.setFillColor(ThemeManager.shared.secondaryColor.cgColor)
         context.fill(CGRect(x: 0, y: 0, width: w, height: h))
 
         // 添加柔和光晕

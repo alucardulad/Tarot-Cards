@@ -24,14 +24,14 @@ class FavoritesViewController: UIViewController {
         let l = UILabel()
         l.text = "还没有收藏的卡牌哦~\n点❤️去收藏吧~"
         l.textAlignment = .center
-        l.textColor = APPConstants.Color.explanationColor
+        l.textColor = ThemeManager.shared.secondaryColor
         l.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return l
     }()
     private let emptyImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(systemName: "heart.slash.fill")
-        iv.tintColor = APPConstants.Color.explanationColor
+        iv.tintColor = ThemeManager.shared.secondaryColor
         iv.contentMode = .scaleAspectFit
         iv.transform = CGAffineTransform(scaleX: -1, y: 1)
         return iv
@@ -78,7 +78,7 @@ class FavoritesViewController: UIViewController {
         view.layer.insertSublayer(backgroundLayer, at: 0)
 
         let ambientLightView = UIView()
-        ambientLightView.backgroundColor = APPConstants.Color.explanationColor
+        ambientLightView.backgroundColor = ThemeManager.shared.secondaryColor
         ambientLightView.alpha = 0.08
         view.addSubview(ambientLightView)
         ambientLightView.snp.makeConstraints { make in
@@ -135,9 +135,17 @@ class FavoritesViewController: UIViewController {
         updateTitle()
     }
 
-    private func updateTitle() {
+    func updateTitle() {
         let count = FavoriteManager.shared.getFavoritesCount()
         title = "❤️ 收藏 (\(count))"
+    }
+
+    /// 由 cell 调用：切换指定卡牌的收藏状态并刷新列表
+    func handleToggleFavorite(cardId: Int) {
+        if let card = favorites.first(where: { $0.id == cardId }) {
+            _ = FavoriteManager.shared.toggleFavorite(card)
+            loadFavorites()
+        }
     }
 
     private func refreshFavorites() {
@@ -155,13 +163,16 @@ extension FavoritesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FavoriteCell", for: indexPath) as! FavoriteCell
-        cell.configure(with: favorites[indexPath])
+        let card = favorites[indexPath.row]
+        cell.configure(with: card)
+        cell.tableView = tableView
+        cell.favoritesVC = self
         return cell
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let card = favorites[indexPath]
+            let card = favorites[indexPath.row]
             FavoriteManager.shared.removeFavorite(card)
             favorites.remove(at: indexPath.row)
 
@@ -184,11 +195,11 @@ extension FavoritesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let card = favorites[indexPath]
+        let card = favorites[indexPath.row]
 
         // 创建卡牌详情页面
         let detailVC = CardDetailViewController()
-        detailVC.setupWithCard(card)
+        detailVC.card = card
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -229,6 +240,7 @@ class FavoriteCell: UITableViewCell {
 
         contentView.addSubview(cardView)
         contentView.addSubview(heartButton)
+        heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
 
         cardView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(16)
@@ -249,7 +261,7 @@ class FavoriteCell: UITableViewCell {
 
         let nameLabel = UILabel()
         nameLabel.font = UIFont.boldSystemFont(ofSize: 18)
-        nameLabel.textColor = APPConstants.Color.bodyColor
+        nameLabel.textColor = ThemeManager.shared.textColor
         infoContainer.addArrangedSubview(nameLabel)
 
         let directionLabel = UILabel()
@@ -259,7 +271,7 @@ class FavoriteCell: UITableViewCell {
 
         let meaningLabel = UILabel()
         meaningLabel.font = UIFont.systemFont(ofSize: 13)
-        meaningLabel.textColor = APPConstants.Color.explanationColor
+        meaningLabel.textColor = ThemeManager.shared.secondaryColor
         meaningLabel.numberOfLines = 2
         infoContainer.addArrangedSubview(meaningLabel)
 
@@ -277,28 +289,11 @@ class FavoriteCell: UITableViewCell {
     }
 
     @objc private func heartButtonTapped() {
-        guard let tag = heartButton.tag as? Int else { return }
-
-        // 查找对应的卡牌
-        if let card = favorites.first(where: { $0.id == tag }) {
-            let isFavorite = FavoriteManager.shared.toggleFavorite(card)
-
-            // 更新按钮状态
-            heartButton.isSelected = isFavorite
-
-            // 刷新数据
-            favorites.removeAll { $0.id == card.id }
-            tableView?.reloadData()
-
-            // 更新标题
-            updateTitle()
-        }
-    }
-
-    private func updateTitle() {
-        favoritesVC?.updateTitle()
+        let tag = heartButton.tag
+        favoritesVC?.handleToggleFavorite(cardId: tag)
     }
 
     weak var tableView: UITableView?
     weak var favoritesVC: FavoritesViewController?
 }
+

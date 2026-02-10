@@ -63,7 +63,7 @@ class DailyDrawViewController: UIViewController {
 
             // 添加环境光呼吸效果
             let ambientLight = UIView()
-            ambientLight.backgroundColor = APPConstants.Color.explanationColor
+            ambientLight.backgroundColor = ThemeManager.shared.secondaryColor
             ambientLight.alpha = 0.08
             view.addSubview(ambientLight)
             ambientLight.snp.makeConstraints { make in
@@ -73,13 +73,13 @@ class DailyDrawViewController: UIViewController {
             // 启动呼吸动画
             animateAmbientLight(ambientLight)
         }
-        }
+        
 
         // 标题
         let titleLabel = UILabel()
         titleLabel.text = "✨ 今日运势签"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 28)
-        titleLabel.textColor = APPConstants.Color.titleColor
+        titleLabel.textColor = ThemeManager.shared.textColor
         titleLabel.textAlignment = .center
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
@@ -103,7 +103,7 @@ class DailyDrawViewController: UIViewController {
         welcomeLabel.numberOfLines = 0
         welcomeLabel.textAlignment = .center
         welcomeLabel.font = UIFont.systemFont(ofSize: 18)
-        welcomeLabel.textColor = APPConstants.Color.bodyColor
+        welcomeLabel.textColor = ThemeManager.shared.textColor
         view.addSubview(welcomeLabel)
         welcomeLabel.snp.makeConstraints { make in
             make.top.equalTo(fortunetellerImageView.snp.bottom).offset(16)
@@ -115,7 +115,7 @@ class DailyDrawViewController: UIViewController {
         streakLabel.numberOfLines = 0
         streakLabel.textAlignment = .center
         streakLabel.font = UIFont.italicSystemFont(ofSize: 16)
-        streakLabel.textColor = APPConstants.Color.explanationColor
+        streakLabel.textColor = ThemeManager.shared.secondaryColor
         view.addSubview(streakLabel)
         streakLabel.snp.makeConstraints { make in
             make.top.equalTo(welcomeLabel.snp.bottom).offset(8)
@@ -128,7 +128,7 @@ class DailyDrawViewController: UIViewController {
         drawButton.setTitleColor(.white, for: .normal)
         drawButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         drawButton.layer.cornerRadius = 25
-        drawButton.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        drawButton.layer.shadowColor = ThemeManager.shared.secondaryColor.cgColor
         drawButton.layer.shadowRadius = 10
         drawButton.layer.shadowOpacity = 0.5
         drawButton.layer.shadowOffset = CGSize(width: 0, height: 5)
@@ -157,7 +157,7 @@ class DailyDrawViewController: UIViewController {
 
         meaningLabel.numberOfLines = 0
         meaningLabel.font = UIFont.systemFont(ofSize: 16)
-        meaningLabel.textColor = APPConstants.Color.bodyColor
+        meaningLabel.textColor = ThemeManager.shared.textColor
         meaningLabel.textAlignment = .center
         meaningView.addSubview(meaningLabel)
         // 将 label 约束到 scroll view 的 contentLayoutGuide，使其成为可滚动内容
@@ -172,7 +172,7 @@ class DailyDrawViewController: UIViewController {
 
 //        // 历史记录按钮
         historyButton.setTitle("查看历史记录", for: .normal)
-        historyButton.setTitleColor(APPConstants.Color.titleColor, for: .normal)
+        historyButton.setTitleColor(ThemeManager.shared.textColor, for: .normal)
         historyButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         historyButton.addTarget(self, action: #selector(showHistory), for: .touchUpInside)
         view.addSubview(historyButton)

@@ -71,7 +71,7 @@ class ResultViewController: UIViewController {
 
         // 添加环境光呼吸效果
         let ambientLight = UIView()
-        ambientLight.backgroundColor = APPConstants.Color.explanationColor
+        ambientLight.backgroundColor = ThemeManager.shared.secondaryColor
         ambientLight.alpha = 0.08
         view.addSubview(ambientLight)
         ambientLight.snp.makeConstraints { make in
@@ -99,7 +99,7 @@ class ResultViewController: UIViewController {
         questionLabel.numberOfLines = 0
         questionLabel.textAlignment = .center
         questionLabel.font = UIFont.systemFont(ofSize: 16)
-        questionLabel.textColor = APPConstants.Color.titleColor
+        questionLabel.textColor = ThemeManager.shared.textColor
         contentView.addSubview(questionLabel)
         questionLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(8)
@@ -139,7 +139,7 @@ class ResultViewController: UIViewController {
             let lbl = UILabel()
             lbl.numberOfLines = 0
             lbl.font = UIFont.systemFont(ofSize: 14)
-            lbl.textColor = APPConstants.Color.explanationColor
+            lbl.textColor = ThemeManager.shared.secondaryColor
             meaningContainer.addArrangedSubview(lbl)
             meaningLabels.append(lbl)
         }
@@ -147,7 +147,7 @@ class ResultViewController: UIViewController {
         let analysis = UILabel()
         analysis.numberOfLines = 0
         analysis.font = UIFont.systemFont(ofSize: 14)
-        analysis.textColor = APPConstants.Color.bodyColor
+        analysis.textColor = ThemeManager.shared.textColor
         analysis.textAlignment = .left
         analysis.text = "结果解析："
         contentView.addSubview(analysis)
@@ -176,9 +176,9 @@ class ResultViewController: UIViewController {
         let bottomRedraw = UIButton(type: .system)
         bottomRedraw.setTitle("再次抽卡", for: .normal)
         bottomRedraw.setTitleColor(.white, for: .normal)
-        bottomRedraw.backgroundColor = APPConstants.Color.explanationColor
+        bottomRedraw.backgroundColor = ThemeManager.shared.secondaryColor
         bottomRedraw.layer.cornerRadius = 22
-        bottomRedraw.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        bottomRedraw.layer.shadowColor = ThemeManager.shared.secondaryColor.cgColor
         bottomRedraw.layer.shadowRadius = 8
         bottomRedraw.layer.shadowOpacity = 0.6
         bottomRedraw.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -190,9 +190,9 @@ class ResultViewController: UIViewController {
         let shareButton = UIButton(type: .system)
         shareButton.setTitle("分享给闺蜜", for: .normal)
         shareButton.setTitleColor(.white, for: .normal)
-        shareButton.backgroundColor = APPConstants.Color.explanationColor
+        shareButton.backgroundColor = ThemeManager.shared.secondaryColor
         shareButton.layer.cornerRadius = 22
-        shareButton.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        shareButton.layer.shadowColor = ThemeManager.shared.secondaryColor.cgColor
         shareButton.layer.shadowRadius = 8
         shareButton.layer.shadowOpacity = 0.6
         shareButton.layer.shadowOffset = CGSize(width: 0, height: 4)

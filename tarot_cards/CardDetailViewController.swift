@@ -53,8 +53,8 @@ class CardDetailViewController: UIViewController {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
         imageView.layer.borderWidth = 2
-        imageView.layer.borderColor = APPConstants.Color.explanationColor.cgColor
-        imageView.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        imageView.layer.borderColor = ThemeManager.shared.secondaryColor.cgColor
+        imageView.layer.shadowColor = ThemeManager.shared.secondaryColor.cgColor
         imageView.layer.shadowOffset = CGSize(width: 0, height: 10)
         imageView.layer.shadowOpacity = 0.5
         imageView.layer.shadowRadius = 25
@@ -65,7 +65,7 @@ class CardDetailViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = APPConstants.Color.titleColor
+        label.textColor = ThemeManager.shared.textColor
         label.textAlignment = .center
         label.numberOfLines = 2
         return label
@@ -75,7 +75,7 @@ class CardDetailViewController: UIViewController {
     private let uprightLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = APPConstants.Color.explanationColor
+        label.textColor = ThemeManager.shared.secondaryColor
         label.textAlignment = .center
         return label
     }()
@@ -84,7 +84,7 @@ class CardDetailViewController: UIViewController {
     private let uprightMeaningLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = APPConstants.Color.bodyColor
+        label.textColor = ThemeManager.shared.textColor
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -94,7 +94,7 @@ class CardDetailViewController: UIViewController {
     private let reversedLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = APPConstants.Color.explanationColor
+        label.textColor = ThemeManager.shared.secondaryColor
         label.textAlignment = .center
         return label
     }()
@@ -103,7 +103,7 @@ class CardDetailViewController: UIViewController {
     private let reversedMeaningLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = APPConstants.Color.bodyColor
+        label.textColor = ThemeManager.shared.textColor
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -114,11 +114,11 @@ class CardDetailViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("✕", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        button.setTitleColor(APPConstants.Color.titleColor, for: .normal)
+        button.setTitleColor(ThemeManager.shared.textColor, for: .normal)
         button.backgroundColor = UIColor(hex: "2D1344")
         button.layer.cornerRadius = 25
         button.layer.borderWidth = 1.5
-        button.layer.borderColor = APPConstants.Color.explanationColor.cgColor
+        button.layer.borderColor = ThemeManager.shared.secondaryColor.cgColor
         return button
     }()
 
@@ -127,11 +127,11 @@ class CardDetailViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("📄 填充信息", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
-        button.setTitleColor(APPConstants.Color.btnT, for: .normal)
+        button.setTitleColor(ThemeManager.shared.primaryColor, for: .normal)
         button.backgroundColor = UIColor(hex: "2D1344")
         button.layer.cornerRadius = 12
         button.layer.borderWidth = 1.5
-        button.layer.borderColor = APPConstants.Color.explanationColor.cgColor
+        button.layer.borderColor = ThemeManager.shared.secondaryColor.cgColor
         return button
     }()
 
@@ -181,14 +181,14 @@ class CardDetailViewController: UIViewController {
         backgroundLayer.frame = view.bounds
         view.layer.insertSublayer(backgroundLayer, at: 0)
 
-        ambientLightView.backgroundColor = APPConstants.Color.explanationColor
+        ambientLightView.backgroundColor = ThemeManager.shared.secondaryColor
         ambientLightView.alpha = 0.08
         view.addSubview(ambientLightView)
         ambientLightView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        cardGlowLayer.fillColor = APPConstants.Color.explanationColor.cgColor
+        cardGlowLayer.fillColor = ThemeManager.shared.secondaryColor.cgColor
         cardGlowLayer.opacity = 0.2
         view.layer.insertSublayer(cardGlowLayer, at: 1)
 
@@ -232,11 +232,11 @@ class CardDetailViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.tintColor = APPConstants.Color.explanationColor
+        navigationController?.navigationBar.tintColor = ThemeManager.shared.secondaryColor
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
         // 标题渐变层：紫色->青色（使用掩码实现文字渐变）
-        titleGradientLayer.colors = [APPConstants.Color.explanationColor.cgColor, APPConstants.Color.btnT.cgColor]
+        titleGradientLayer.colors = [ThemeManager.shared.secondaryColor.cgColor, ThemeManager.shared.primaryColor.cgColor]
         titleGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         titleGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
 
@@ -314,9 +314,9 @@ class CardDetailViewController: UIViewController {
         favoriteButton.setTitle("❤️ 收藏", for: .normal)
         favoriteButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         favoriteButton.setTitleColor(.white, for: .normal)
-        favoriteButton.backgroundColor = APPConstants.Color.explanationColor
+        favoriteButton.backgroundColor = ThemeManager.shared.secondaryColor
         favoriteButton.layer.cornerRadius = 16
-        favoriteButton.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        favoriteButton.layer.shadowColor = ThemeManager.shared.secondaryColor.cgColor
         favoriteButton.layer.shadowRadius = 5
         favoriteButton.layer.shadowOpacity = 0.5
         favoriteButton.layer.shadowOffset = CGSize(width: 0, height: 2)

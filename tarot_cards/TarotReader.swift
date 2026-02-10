@@ -394,7 +394,7 @@ class ReaderManager {
 
     /// 获取当前默认占卜师（温和风格）
     var defaultReader: TarotReader {
-        return gentleStyle.reader
+        return ReaderManager.shared.allReaders.first ?? ReaderManager.shared.allReaders[0]
     }
 
     // MARK: - 温柔导师风格配置

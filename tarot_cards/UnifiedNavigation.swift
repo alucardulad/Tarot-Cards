@@ -25,12 +25,12 @@ extension UIViewController {
         // 自定义导航栏外观
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = APPConstants.Color.navBackgroundColor
+        appearance.backgroundColor = ThemeManager.shared.navigationBarBackgroundColor
         appearance.titleTextAttributes = [
-            .foregroundColor: APPConstants.Color.navTitleColor,
+            .foregroundColor: ThemeManager.shared.navigationBarTitleColor,
             .font: UIFont.systemFont(ofSize: 18, weight: .semibold)
         ]
-        appearance.shadowColor = APPConstants.Color.navShadowColor
+        appearance.shadowColor = ThemeManager.shared.navigationBarBackgroundColor
 
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
@@ -139,7 +139,7 @@ extension UIViewController {
         // 环境光呼吸效果
         if hasAmbientLight {
             let ambientLight = UIView()
-            ambientLight.backgroundColor = APPConstants.Color.explanationColor
+            ambientLight.backgroundColor = ThemeManager.shared.secondaryColor
             ambientLight.alpha = 0.08
             view.addSubview(ambientLight)
             ambientLight.snp.makeConstraints { make in

@@ -55,7 +55,7 @@ class AppreciationViewController: UIViewController {
     private lazy var emptyLabel: UILabel = {
         let label = UILabel()
         label.text = "正在加载塔罗牌..."
-        label.textColor = APPConstants.Color.titleColor
+        label.textColor = ThemeManager.shared.secondaryColor
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .center
         return label
@@ -94,9 +94,9 @@ class AppreciationViewController: UIViewController {
     /// - 起点和终点：垂直居中
     private func setupBackgroundEffects() {
         let colors = [
-            UIColor(hex: "2D1344").cgColor,
+            ThemeManager.shared.primaryGradientStart.cgColor,
             UIColor(hex: "1E1233").cgColor,
-            UIColor(hex: "120632").cgColor
+            ThemeManager.shared.primaryGradientEnd.cgColor
         ]
         backgroundLayer.colors = colors
         backgroundLayer.startPoint = CGPoint(x: 0.5, y: 0)
@@ -106,7 +106,7 @@ class AppreciationViewController: UIViewController {
         view.layer.insertSublayer(backgroundLayer, at: 0)
 
         // 环境光晕：紫色，透明度0.08
-        ambientLightView.backgroundColor = APPConstants.Color.explanationColor
+        ambientLightView.backgroundColor = ThemeManager.shared.secondaryColor
         ambientLightView.alpha = 0.08
         view.addSubview(ambientLightView)
         ambientLightView.snp.makeConstraints { make in
@@ -142,7 +142,7 @@ class AppreciationViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.tintColor = APPConstants.Color.explanationColor
+        navigationController?.navigationBar.tintColor = ThemeManager.shared.primaryColor
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
         view.addSubview(collectionView)
@@ -224,8 +224,8 @@ class CardCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 12
         imageView.layer.borderWidth = 1.5
-        imageView.layer.borderColor = APPConstants.Color.explanationColor.cgColor
-        imageView.layer.shadowColor = APPConstants.Color.explanationColor.cgColor
+        imageView.layer.borderColor = ThemeManager.shared.secondaryColor.cgColor
+        imageView.layer.shadowColor = ThemeManager.shared.secondaryColor.cgColor
         imageView.layer.shadowOffset = CGSize(width: 0, height: 4)
         imageView.layer.shadowOpacity = 0.4
         imageView.layer.shadowRadius = 10
@@ -236,7 +236,7 @@ class CardCell: UICollectionViewCell {
     private let cardNumberLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-        label.textColor = APPConstants.Color.titleColor
+        label.textColor = ThemeManager.shared.textColor
         return label
     }()
 
@@ -244,7 +244,7 @@ class CardCell: UICollectionViewCell {
     private let cardNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        label.textColor = APPConstants.Color.titleColor
+        label.textColor = ThemeManager.shared.textColor
         label.textAlignment = .center
         label.numberOfLines = 2
         return label
@@ -303,7 +303,7 @@ class CardCell: UICollectionViewCell {
         glowAnimation.autoreverses = true
         glowAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         // Configure and add glow layer
-        glowLayer.fillColor = APPConstants.Color.explanationColor.cgColor
+        glowLayer.fillColor = ThemeManager.shared.secondaryColor.cgColor
         glowLayer.opacity = 0.15
         contentView.layer.insertSublayer(glowLayer, at: 0)
         // start animation
@@ -319,7 +319,7 @@ class CardCell: UICollectionViewCell {
     private func updateGlowPath() {
         glowLayer.frame = bounds
         glowLayer.path = UIBezierPath(roundedRect: bounds.insetBy(dx: 4, dy: 4), cornerRadius: 12).cgPath
-        glowLayer.fillColor = APPConstants.Color.explanationColor.cgColor
+        glowLayer.fillColor = ThemeManager.shared.secondaryColor.cgColor
     }
 
     // MARK: - 布局变化

@@ -153,7 +153,7 @@ class DailyDrawHistoryCell: UITableViewCell {
         
         // 日期标签
         dateLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        dateLabel.textColor = APPConstants.Color.titleColor
+        dateLabel.textColor = ThemeManager.shared.textColor
         backgroundView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
@@ -162,7 +162,7 @@ class DailyDrawHistoryCell: UITableViewCell {
         
         // 连续签到标签
         streakLabel.font = UIFont.italicSystemFont(ofSize: 14)
-        streakLabel.textColor = APPConstants.Color.explanationColor
+        streakLabel.textColor = ThemeManager.shared.secondaryColor
         backgroundView.addSubview(streakLabel)
         streakLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
@@ -184,7 +184,7 @@ class DailyDrawHistoryCell: UITableViewCell {
         // 总结标签
         summaryLabel.numberOfLines = 0
         summaryLabel.font = UIFont.systemFont(ofSize: 14)
-        summaryLabel.textColor = APPConstants.Color.bodyColor
+        summaryLabel.textColor = ThemeManager.shared.textColor
         backgroundView.addSubview(summaryLabel)
         summaryLabel.snp.makeConstraints { make in
             make.top.equalTo(cardsStack.snp.bottom).offset(12)
@@ -210,7 +210,7 @@ class DailyDrawHistoryCell: UITableViewCell {
                 streakLabel.textColor = .systemGreen
             } else {
                 streakLabel.text = "✓"
-                streakLabel.textColor = APPConstants.Color.explanationColor
+                streakLabel.textColor = ThemeManager.shared.secondaryColor
             }
         }
         

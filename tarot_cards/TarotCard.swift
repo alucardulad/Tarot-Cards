@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct TarotCard {
+struct TarotCard: Codable {
     let id: Int
     let name: String
     let image: String

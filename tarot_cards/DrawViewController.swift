@@ -329,7 +329,7 @@ class DrawViewController: UIViewController {
         let dailyDrawButton = UIButton(type: .system)
         dailyDrawButton.setTitle("✨ 每日一签", for: .normal)
         dailyDrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        dailyDrawButton.setupPrimaryButton(title: "每日一签", color: APPConstants.Color.explanationColor)
+        dailyDrawButton.setupPrimaryButton(title: "每日一签", color: ThemeManager.shared.secondaryColor)
         dailyDrawButton.addTarget(self, action: #selector(dailyDrawTapped), for: .touchUpInside)
         entryButtonsContainer.addArrangedSubview(dailyDrawButton)
 
@@ -337,7 +337,7 @@ class DrawViewController: UIViewController {
         let appreciationButton = UIButton(type: .system)
         appreciationButton.setTitle("鉴赏模式", for: .normal)
         appreciationButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        appreciationButton.setupPrimaryButton(title: "鉴赏模式", color: APPConstants.Color.explanationColor)
+        appreciationButton.setupPrimaryButton(title: "鉴赏模式", color: ThemeManager.shared.secondaryColor)
         appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
         entryButtonsContainer.addArrangedSubview(appreciationButton)
 

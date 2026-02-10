@@ -13,6 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // 初始化主题管理器
+        ThemeManager.shared.loadSavedReaderId()
+
         // Override point for customization after application launch.
         return true
     }

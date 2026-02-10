@@ -71,6 +71,50 @@ class ParticleManager {
         objc_setAssociatedObject(view, &associatedKeys.orbsKey, particleLayer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
+    /**
+     添加呼吸光晕（非 CAEmitter，实现为带呼吸动画的 UIView 圆点）
+     - 参数:
+       - view: 添加到的父视图
+       - count: 光晕数量
+       - colors: 光晕颜色数组（CGColor）
+     */
+    static func addBreathingOrbs(to view: UIView, count: Int = 3, colors: [CGColor] = [UIColor.white.cgColor]) {
+        var orbs: [UIView] = []
+        for i in 0..<max(0, count) {
+            let size: CGFloat = CGFloat(40 + (i % 3) * 10)
+            let x = CGFloat.random(in: 0...(view.bounds.width - size))
+            let y = CGFloat.random(in: 0...(view.bounds.height - size))
+            let orb = UIView(frame: CGRect(x: x, y: y, width: size, height: size))
+            orb.layer.cornerRadius = size / 2
+            orb.backgroundColor = UIColor(cgColor: colors[i % colors.count])
+            orb.alpha = 0.0
+            orb.isUserInteractionEnabled = false
+            view.addSubview(orb)
+
+            let anim = CABasicAnimation(keyPath: "opacity")
+            anim.fromValue = 0.0
+            anim.toValue = 0.7
+            anim.duration = CFTimeInterval(2.5 + Double(i) * 0.4)
+            anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            anim.autoreverses = true
+            anim.repeatCount = .infinity
+            orb.layer.add(anim, forKey: "breathingOpacity")
+
+            let scale = CABasicAnimation(keyPath: "transform.scale")
+            scale.fromValue = 0.9
+            scale.toValue = 1.15
+            scale.duration = anim.duration
+            scale.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            scale.autoreverses = true
+            scale.repeatCount = .infinity
+            orb.layer.add(scale, forKey: "breathingScale")
+
+            orbs.append(orb)
+        }
+
+        objc_setAssociatedObject(view, &associatedKeys.breathingOrbsKey, orbs, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
     // MARK: - 流星粒子
 
     /**
@@ -152,6 +196,13 @@ class ParticleManager {
             layer.removeAllAnimations()
             layer.removeFromSuperlayer()
         }
+
+        if let orbs = objc_getAssociatedObject(view, &associatedKeys.breathingOrbsKey) as? [UIView] {
+            for orb in orbs {
+                orb.layer.removeAllAnimations()
+                orb.removeFromSuperview()
+            }
+        }
     }
 
     /**
@@ -220,6 +271,19 @@ class ParticleManager {
             layer.emitterSize = view.bounds.size
             layer.emitterShape = .rectangle
         }
+
+        if let orbs = objc_getAssociatedObject(view, &associatedKeys.breathingOrbsKey) as? [UIView] {
+            for orb in orbs {
+                // 保持相对位置，如果超出边界则随机重置
+                if orb.frame.maxX > view.bounds.width || orb.frame.maxY > view.bounds.height {
+                    let size = orb.bounds.width
+                    let x = CGFloat.random(in: 0...(view.bounds.width - size))
+                    let y = CGFloat.random(in: 0...(view.bounds.height - size))
+                    orb.frame = CGRect(x: x, y: y, width: size, height: size)
+                    orb.layer.cornerRadius = size / 2
+                }
+            }
+        }
     }
 
     /**
@@ -247,4 +311,5 @@ private enum associatedKeys {
     static var orbsKey: UInt8 = 1
     static var shootingStarsKey: UInt8 = 2
     static var dustKey: UInt8 = 3
+    static var breathingOrbsKey: UInt8 = 4
 }

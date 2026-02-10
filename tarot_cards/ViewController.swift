@@ -89,9 +89,9 @@ class ViewController: UIViewController {
 
     private func setupBackgroundEffects() {
         let colors = [
-            UIColor(hex: "2D1344").cgColor,
+            ThemeManager.shared.primaryGradientStart.cgColor,
             UIColor(hex: "1E1233").cgColor,
-            UIColor(hex: "120632").cgColor
+            ThemeManager.shared.primaryGradientEnd.cgColor
         ]
         backgroundLayer.colors = colors
         backgroundLayer.startPoint = CGPoint(x: 0.5, y: 0)
@@ -100,7 +100,7 @@ class ViewController: UIViewController {
         backgroundLayer.frame = view.bounds
         view.layer.insertSublayer(backgroundLayer, at: 0)
 
-        ambientLightView.backgroundColor = APPConstants.Color.explanationColor
+        ambientLightView.backgroundColor = ThemeManager.shared.secondaryColor
         ambientLightView.alpha = 0.08
         view.addSubview(ambientLightView)
         ambientLightView.snp.makeConstraints { make in
@@ -158,7 +158,7 @@ class ViewController: UIViewController {
         let appreciationButton = UIButton(type: .system)
         appreciationButton.setTitle("✨ 星空鉴赏", for: .normal)
         appreciationButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        appreciationButton.setupPrimaryButton(title: "星空鉴赏", color: APPConstants.Color.explanationColor)
+        appreciationButton.applyLargeButtonStyle()
         appreciationButton.addTarget(self, action: #selector(openAppreciation), for: .touchUpInside)
         entryButtonsContainer.addArrangedSubview(appreciationButton)
 
@@ -166,7 +166,7 @@ class ViewController: UIViewController {
         let favoritesButton = UIButton(type: .system)
         favoritesButton.setTitle("❤️ 我的收藏", for: .normal)
         favoritesButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        favoritesButton.setupPrimaryButton(title: "我的收藏", color: APPConstants.Color.explanationColor)
+        favoritesButton.applyLargeButtonStyle()
         favoritesButton.addTarget(self, action: #selector(openFavorites), for: .touchUpInside)
         entryButtonsContainer.addArrangedSubview(favoritesButton)
 
@@ -187,7 +187,7 @@ class ViewController: UIViewController {
         let goDrawButton = UIButton(type: .system)
         goDrawButton.setTitle("去抽卡", for: .normal)
         goDrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
-        goDrawButton.setupSmallButton(title: "去抽卡", color: APPConstants.Color.explanationColor)
+        goDrawButton.applyCapsuleButtonStyle()
         goDrawButton.addTarget(self, action: #selector(openDrawPage), for: .touchUpInside)
         contentView.addSubview(goDrawButton)
         self.goDrawButton = goDrawButton
@@ -222,7 +222,7 @@ class ViewController: UIViewController {
         let redrawButton = UIButton(type: .system)
         redrawButton.setTitle("再次抽卡", for: .normal)
         redrawButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        redrawButton.setupSmallButton(title: "再次抽卡", color: APPConstants.Color.explanationColor)
+        redrawButton.applyCapsuleButtonStyle()
         redrawButton.addTarget(self, action: #selector(drawNewCards), for: .touchUpInside)
         contentView.addSubview(redrawButton)
         self.redrawButton = redrawButton
@@ -405,7 +405,7 @@ class CardDisplayView: UIView {
         nameLabel.text = card.name
         directionLabel.text = card.directionText
         directionLabel.textColor = card.isUpright ? .systemGreen : .systemRed
-        nameLabel.textColor = APPConstants.Color.bodyColor
+        nameLabel.textColor = ThemeManager.shared.textColor
         imageView.transform = card.isUpright ? .identity : CGAffineTransform(rotationAngle: .pi)
     }
 

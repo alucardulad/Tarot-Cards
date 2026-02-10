@@ -55,6 +55,9 @@ class ReaderSelectViewController: UIViewController {
 
         setupUI()
         setupBackgroundEffects()
+
+        // 应用当前主题
+        applyCurrentTheme()
     }
 
     // MARK: - Setup
@@ -65,7 +68,7 @@ class ReaderSelectViewController: UIViewController {
         // 标题区域
         let headerView = UIView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.backgroundColor = UIColor(hex: "7D3FE1").withAlphaComponent(0.3)
+        headerView.backgroundColor = ThemeManager.shared.primaryGradientStart
         headerView.layer.cornerRadius = 20
         headerView.layer.masksToBounds = true
 
@@ -164,14 +167,6 @@ class ReaderSelectViewController: UIViewController {
 
     // MARK: - Actions
 
-    private func didSelectReader(_ reader: TarotReader) {
-        // 保存选择的占卜师
-        UserDefaults.standard.set(reader.id, forKey: "selectedReaderId")
-
-        // 返回结果
-        navigationController?.popViewController(animated: true)
-    }
-
     private func toggleFavoriteReader(_ reader: TarotReader) {
         if ReaderManager.shared.isFavoriteReader(id: reader.id) {
             ReaderManager.shared.removeFavoriteReader(id: reader.id)
@@ -226,12 +221,36 @@ extension ReaderSelectViewController: UITableViewDelegate {
 
         // 刷新收藏按钮的样式
         if let cell = tableView.cellForRow(at: indexPath) as? ReaderCell {
-            cell.configure(with: reader, isSelected: false, isFavorite: ReaderManager.shared.isFavoriteReader(id: reader.id))
+            let isFavorite = ReaderManager.shared.isFavoriteReader(id: reader.id)
+            cell.configure(with: reader, isSelected: false, isFavorite: isFavorite)
         }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+
+    // MARK: - 选择占卜师
+
+    private func didSelectReader(_ reader: TarotReader) {
+        // 保存选择的占卜师
+        ThemeManager.shared.saveCurrentReaderId(reader.id)
+
+        // 通知所有 ViewController 主题已更新
+        NotificationCenter.default.post(name: .themeDidChange, object: nil)
+
+        // 返回结果
+        navigationController?.popViewController(animated: true)
+    }
+
+    // MARK: - 应用当前主题
+
+    private func applyCurrentTheme() {
+        // 加载保存的占卜师
+        ThemeManager.shared.loadSavedReaderId()
+
+        // 刷新表格
+        tableView.reloadData()
     }
 }
 
@@ -239,7 +258,7 @@ extension ReaderSelectViewController: UITableViewDelegate {
 
 class ReaderCell: UITableViewCell {
 
-    private lazy var containerView: UIView = {
+    lazy var containerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 16
         view.layer.borderWidth = 2
@@ -248,7 +267,7 @@ class ReaderCell: UITableViewCell {
         return view
     }()
 
-    private lazy var avatarImageView: UIImageView = {
+    lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 30
@@ -257,7 +276,7 @@ class ReaderCell: UITableViewCell {
         return imageView
     }()
 
-    private lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .white
@@ -265,7 +284,7 @@ class ReaderCell: UITableViewCell {
         return label
     }()
 
-    private lazy var tagsLabel: UILabel = {
+    lazy var tagsLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor(hex: "A5F2FF")
@@ -274,7 +293,7 @@ class ReaderCell: UITableViewCell {
         return label
     }()
 
-    private lazy var bioLabel: UILabel = {
+    lazy var bioLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = UIColor(hex: "CCCCCC")
@@ -283,7 +302,7 @@ class ReaderCell: UITableViewCell {
         return label
     }()
 
-    private lazy var selectButton: UIButton = {
+    lazy var selectButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("选择", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
@@ -296,7 +315,7 @@ class ReaderCell: UITableViewCell {
         return button
     }()
 
-    private lazy var favoriteButton: UIButton = {
+    lazy var favoriteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = UIColor(hex: "CCCCCC")

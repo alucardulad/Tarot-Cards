@@ -1,0 +1,42 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace tarot_cards.xcworkspace -scheme tarot_cards -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" clean build
+
+Build settings from command line:
+    SDKROOT = iphonesimulator18.5
+
+2026-02-10 08:11:56.851 xcodebuild[93248:1485229] Writing error result bundle to /var/folders/m0/93d302wd0zz3bwcvzmrc77180000gn/T/ResultBundle_2026-10-02_08-11-0056.xcresult
+xcodebuild: error: Unable to find a device matching the provided destination specifier:
+		{ platform:iOS Simulator, OS:18.2, name:iPhone 16 }
+
+	The requested device could not be found because no available devices matched the request.
+
+	Available destinations for the "tarot_cards" scheme:
+		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
+		{ platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }
+		{ platform:iOS Simulator, arch:x86_64, id:1225E54D-DF8C-41E1-ABA8-BC09490973F6, OS:18.1, name:iPad (10th generation) }
+		{ platform:iOS Simulator, arch:x86_64, id:BAE2F712-EEDA-4E24-9B0A-D342CE0BE5E4, OS:18.5, name:iPad (10th generation) }
+		{ platform:iOS Simulator, arch:x86_64, id:5A73C3EF-11F9-4334-86E6-00669660EE78, OS:18.5, name:iPad (A16) }
+		{ platform:iOS Simulator, arch:x86_64, id:AAB4C513-0D54-495A-9BF8-A9FBDF47F16A, OS:18.1, name:iPad Air 11-inch (M2) }
+		{ platform:iOS Simulator, arch:x86_64, id:826C9323-D2C9-4859-9314-023AE7505E40, OS:18.5, name:iPad Air 11-inch (M2) }
+		{ platform:iOS Simulator, arch:x86_64, id:11862456-B492-48FF-974E-D35DCFD21CE2, OS:18.5, name:iPad Air 11-inch (M3) }
+		{ platform:iOS Simulator, arch:x86_64, id:27C2E7FC-60E2-418F-8B78-F98F688E72C4, OS:18.1, name:iPad Air 13-inch (M2) }
+		{ platform:iOS Simulator, arch:x86_64, id:4AD4E558-6D6B-4C07-8BC5-C846DF34234E, OS:18.5, name:iPad Air 13-inch (M2) }
+		{ platform:iOS Simulator, arch:x86_64, id:5F03DA6C-D207-4AFA-9FC7-C465697C76E1, OS:18.5, name:iPad Air 13-inch (M3) }
+		{ platform:iOS Simulator, arch:x86_64, id:321A7FA0-567B-467F-B59D-3A3006FAFFD6, OS:18.1, name:iPad Pro 11-inch (M4) }
+		{ platform:iOS Simulator, arch:x86_64, id:406C5721-1B38-4DF2-87AE-9F851D8FE1C0, OS:18.5, name:iPad Pro 11-inch (M4) }
+		{ platform:iOS Simulator, arch:x86_64, id:083B3206-0C42-44E8-AC8C-A8CC7E649C85, OS:18.1, name:iPad Pro 13-inch (M4) }
+		{ platform:iOS Simulator, arch:x86_64, id:43C0BE9A-4F01-4091-AB68-E84542BE83AB, OS:18.5, name:iPad Pro 13-inch (M4) }
+		{ platform:iOS Simulator, arch:x86_64, id:04B89FBE-7B54-4D9C-969E-AB68AE666929, OS:18.1, name:iPad mini (A17 Pro) }
+		{ platform:iOS Simulator, arch:x86_64, id:DD9361D0-7DAC-481C-8CF5-792DE93A2D30, OS:18.5, name:iPad mini (A17 Pro) }
+		{ platform:iOS Simulator, arch:x86_64, id:E9857553-4004-40D1-804F-610CE6616805, OS:18.5, name:iPhone 12 Pro }
+		{ platform:iOS Simulator, arch:x86_64, id:444D38B4-0685-4A9D-8829-3A7E7486BC95, OS:18.1, name:iPhone 16 }
+		{ platform:iOS Simulator, arch:x86_64, id:1E33C618-CA7E-453F-9044-717ACB0DEDFB, OS:18.5, name:iPhone 16 }
+		{ platform:iOS Simulator, arch:x86_64, id:B593ED4D-975E-4C37-8952-08EFCEA87488, OS:18.1, name:iPhone 16 Plus }
+		{ platform:iOS Simulator, arch:x86_64, id:FB9B0D1A-353F-4131-88E9-24CC20292A14, OS:18.5, name:iPhone 16 Plus }
+		{ platform:iOS Simulator, arch:x86_64, id:84EE018F-D0CE-40F5-9F27-EF73A4DA49E5, OS:18.1, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, arch:x86_64, id:4A3B732A-2654-4592-9A52-718660F727AA, OS:18.5, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, arch:x86_64, id:7B7FD6E5-0BDD-4B35-B901-C46D7B729D0C, OS:18.1, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, arch:x86_64, id:0182016A-7DAE-403D-A155-E33B11287147, OS:18.5, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, arch:x86_64, id:9F958D49-6122-487D-A3C4-EBE28275D180, OS:18.5, name:iPhone 16e }
+		{ platform:iOS Simulator, arch:x86_64, id:515C00D3-C706-45C7-87E5-DF8AC2BF3470, OS:18.1, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, arch:x86_64, id:657FC50F-311E-4661-81F2-8A5771BB1BAC, OS:18.5, name:iPhone SE (3rd generation) }

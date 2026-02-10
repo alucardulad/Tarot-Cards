@@ -24,6 +24,13 @@ class TabBarController: UITabBarController {
         configureTabBarAppearance()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // 确保主题已应用
+        applyTheme()
+    }
+
     // MARK: - 配置标签页
 
     private func configureViewControllers() {
@@ -96,32 +103,35 @@ class TabBarController: UITabBarController {
     // MARK: - 配置标签栏样式
 
     private func configureTabBarAppearance() {
-        // 获取标签栏的标准外观
-        guard let appearance = tabBar.standardAppearance else { return }
-
-        // 配置背景色
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = APPConstants.Color.tabBarBackgroundColor
-        appearance.shadowColor = APPConstants.Color.tabBarShadowColor
-
-        // 配置普通状态
-        appearance.stackedLayoutAppearance.normal.iconColor = APPConstants.Color.tabIconNormal
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: APPConstants.Color.tabTitleNormal
-        ]
-
-        // 配置选中状态
-        appearance.stackedLayoutAppearance.selected.iconColor = APPConstants.Color.tabIconSelected
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: APPConstants.Color.tabTitleSelected
-        ]
-
-        // 应用到标签栏
-        tabBar.standardAppearance = appearance
-
         // 对于iOS 13以下设备
         if #available(iOS 13.0, *) {
-            tabBar.scrollEdgeAppearance = appearance
+            applyTheme()
+
+            tabBar.scrollEdgeAppearance = tabBar.standardAppearance
         }
+    }
+
+    // MARK: - 应用主题
+
+    private func applyTheme() {
+        guard #available(iOS 13.0, *) else { return }
+
+        let appearance = tabBar.standardAppearance
+
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = ThemeManager.shared.tabBarBackgroundColor
+        appearance.shadowColor = UIColor(hex: "000000").withAlphaComponent(0.2)
+
+        appearance.stackedLayoutAppearance.normal.iconColor = ThemeManager.shared.tabBarIconColor
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            .foregroundColor: ThemeManager.shared.tabBarTitleColor
+        ]
+
+        appearance.stackedLayoutAppearance.selected.iconColor = ThemeManager.shared.tabBarIconSelectedColor
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            .foregroundColor: ThemeManager.shared.tabBarTitleSelectedColor
+        ]
+
+        tabBar.standardAppearance = appearance
     }
 }
